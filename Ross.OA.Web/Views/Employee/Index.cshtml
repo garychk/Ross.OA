@@ -1,0 +1,122 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPageInner.cshtml";
+}
+<section class="content-header">
+    <h1>
+        员工设置
+        <small>Employee Manager</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Dashboard/"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">员工设置</li>
+    </ol>
+</section>
+<section class="content">
+    <div class="box no-border">
+        <div class="box-header">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default" id="BtnEdit" onclick="OpenPage('/Employee/Edit/0')"><i class="fa fa-file"></i></button>
+                <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="保存"><i class="fa fa-save"></i></button>
+                <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="刷新" onclick="RefreshVueData()"><i class="fa fa-refresh"></i></button>
+                <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-remove"></i></button>
+            </div>
+            <div class="box-tools">
+                <div class="input-group input-group-sm" style="width: 150px;">
+                    <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+                    <div class="input-group-btn">
+                        <input type="hidden" value="1" id="pageindex" />
+                        <button type="button" class="btn btn-default" onclick="RefreshVueData()"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="DeptDt">
+            <div class="box-body table-responsive no-padding">
+                <table class="table table-hover EmployeeDt">
+                    <tr>
+                        <th>公司</th>
+                        <th>工号</th>
+                        <th>用户名</th>
+                        <th>电话</th>
+                        <th>有效</th>
+                        <th>操作</th>
+                    </tr>
+                    <tr v-for="item in mydata">
+                        <td>{{item.Company}}</td>
+                        <td>{{item.UserId}}</td>
+                        <td>{{item.UserName}}</td>
+                        <td>{{item.Phone}}</td>
+                        <td>{{item.IsDeleted}}</td>
+                        <td>
+                            <a class="btn btn-danger btn-xs" href="#" v-on:click="udelete(item.Id)">删除</a>
+                            <a class="btn btn-success btn-xs" href="#" v-on:click="uedit(item.Id)">编辑</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="box-footer clearfix">
+                <ul class="pagination pagination-sm no-margin pull-right">
+                    <li><a href="#">&laquo;</a></li>
+                    <li v-for="value in pages"><a href="#" v-on:click="chgpage(value)">{{value}}</a></li>
+                    <li><a href="#">&raquo;</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+@section scripts{
+    <script>
+        var vm = new Vue({
+            el: '#DeptDt',
+            data: {
+                mydata: [],
+                pages: 0
+            },
+            methods: {
+                chgpage: function (p) {
+                    $('#pageindex').val(p);
+                    GetCustData(vm);
+                    return false;
+                },
+                uedit: function (_id) {
+                    OpenPage('/Employee/Edit/' + _id);
+                },
+                udelete: function (_id) {
+                    confirmE('确定删除？', function () {
+                        $.ajax({
+                            url: '/Employee/Del',
+                            type: "POST",
+                            data: { id: _id },
+                            success: function (resp) {
+                                $.alert('删除成功!');
+                                GetCustData(vm);
+                            }
+                        });
+                    });
+                }
+            }
+        });
+
+        $(function () {
+            GetCustData(vm)
+        })
+        function OpenPage(_url) {
+            window.location.href = _url;
+        }
+        function RefreshVueData() {
+            GetCustData(vm)
+        }
+        function GetCustData(vm) {
+            var _page = parseInt($('#pageindex').val())
+            $.post('/Employee/GetLists',
+                { page: _page, pageSize: 20, keywords: $('input[name=table_search]').val() },
+                function (response) {
+                    Vue.set(vm, 'mydata', response.datas)
+                    Vue.set(vm, 'pages', response.pages)
+                });
+        }
+    </script>
+}
+

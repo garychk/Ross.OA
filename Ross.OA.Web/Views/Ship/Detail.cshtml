@@ -1,0 +1,151 @@
+﻿
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_LayoutPageInner.cshtml";
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        发货清单
+        <small>Ship List</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="/Ship/">发货清单</a></li>
+        <li class="active">发货详情</li>
+    </ol>
+</section>
+<div class="pad margin no-print">
+    <div class="callout callout-info" style="margin-bottom: 0!important;">
+        <h4><i class="fa fa-info"></i> 备注:</h4>
+        收到货后请核对外包装和数量，务必签字回传！
+    </div>
+</div>
+<!-- Main content -->
+<section class="invoice">
+    <!-- title row -->
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="page-header">
+                <i class="fa fa-globe"></i> 罗斯（无锡）设备有限公司.
+                <small class="pull-right">订单日期： @(DateTime.Now.ToShortDateString())</small>
+            </h2>
+            <p>地址: 无锡市锡山经济开发区万全路55号  邮编: 214101<br>Tel: 0510-85080388    Fax: 0510-88263400</p>
+        </div>
+        <!-- /.col -->
+    </div>    
+    <!-- Table row -->
+    <div class="row">
+        <div class="col-xs-12 table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>服务号/合同号</th>
+                        <th>产品号</th>
+                        <th>物料编码</th>
+                        <th>物料名称</th>
+                        <th>型号</th>
+                        <th>数量</th>
+                        <th>SO号</th>
+                        <th>原因</th>
+                        <th>责任部门</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Call of Duty</td>
+                        <td>455-981-221</td>
+                        <td>El snort testosterone trophy driving gloves handsome</td>
+                        <td>$64.50</td>
+                        <td>1</td>
+                        <td>Call of Duty</td>
+                        <td>455-981-221</td>
+                        <td>El</td>
+                        <td>$64.50</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <!-- accepted payments column -->
+        <div class="col-xs-6">
+            <p class="lead">付款方式：</p>
+            <p class="text-muted well well-sm no-shadow">
+                Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem plugg
+                dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
+            </p>
+        </div>
+        <!-- /.col -->
+        <div class="col-xs-6">
+            <p class="lead">金额总计：</p>
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th style="width:50%">数量汇总:</th>
+                        <td>$250.30</td>
+                    </tr>
+                    <tr>
+                        <th>税率 (9.3%)</th>
+                        <td>$10.34</td>
+                    </tr>
+                    <tr>
+                        <th>货品金额:</th>
+                        <td>$5.80</td>
+                    </tr>
+                    <tr>
+                        <th>总金额:</th>
+                        <td>$265.24</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- info row -->
+    <div class="row invoice-info">
+        <div class="col-sm-6 invoice-col">
+            <p class="lead">
+                发货单位
+            </p>
+            <address>
+                罗斯（无锡）设备有限公司<br>
+                <strong>　发货人：</strong>John Doe<br>
+                <strong>　确认人：</strong>John Doe<br>
+                <strong>发货方式：</strong><input type="checkbox"> 快递 <input type="checkbox"> 物流<br>
+                <strong>　　电话：</strong>Phone: (804) 123-5432
+            </address>
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-6 invoice-col">
+            <p class="lead">
+                收货单位
+            </p>
+            <address>
+                <strong>　收货人：</strong>John Doe<br>
+                <strong>收货地址：</strong>795 Folsom Ave, Suite 600
+                San Francisco, CA 94107<br>
+                <strong>　　电话：</strong>Phone: (555) 539-1037
+            </address>
+        </div>
+    </div>
+    <!-- /.row -->
+    <!-- /.row -->
+    <!-- this row will not appear when printing -->
+    <div class="row no-print">
+        <div class="col-xs-12">
+            <a href="invoice-print.html" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> 打印</a>
+            <a href="/Ship/Edit/0" class="btn btn-success pull-right">
+                <i class="fa fa-credit-card"></i> 修改
+            </a>
+            <button type="button" class="btn btn-primary pull-right" style="margin-right: 5px;">
+                <i class="fa fa-download"></i> 下载 PDF
+            </button>
+        </div>
+    </div>
+</section>
+

@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8B90197C-56C0-4CC9-A645-858D29F270A5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ross.OA.EntityFramework</RootNamespace>
+    <AssemblyName>Ross.OA.EntityFramework</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Migrations\201804070342316_InitDB.cs" />
+    <Compile Include="Migrations\201804070342316_InitDB.Designer.cs">
+      <DependentUpon>201804070342316_InitDB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804070800597_AddCategoryModel.cs" />
+    <Compile Include="Migrations\201804070800597_AddCategoryModel.Designer.cs">
+      <DependentUpon>201804070800597_AddCategoryModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804070803061_AddCategoryModel2.cs" />
+    <Compile Include="Migrations\201804070803061_AddCategoryModel2.Designer.cs">
+      <DependentUpon>201804070803061_AddCategoryModel2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804090531595_AddCustCompany.cs" />
+    <Compile Include="Migrations\201804090531595_AddCustCompany.Designer.cs">
+      <DependentUpon>201804090531595_AddCustCompany.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804111124434_ModShipHeadModel.cs" />
+    <Compile Include="Migrations\201804111124434_ModShipHeadModel.Designer.cs">
+      <DependentUpon>201804111124434_ModShipHeadModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804111212019_ModShipHeadFielOrderNum.cs" />
+    <Compile Include="Migrations\201804111212019_ModShipHeadFielOrderNum.Designer.cs">
+      <DependentUpon>201804111212019_ModShipHeadFielOrderNum.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804120333310_UptShip.cs" />
+    <Compile Include="Migrations\201804120333310_UptShip.Designer.cs">
+      <DependentUpon>201804120333310_UptShip.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804120347073_UptPart.cs" />
+    <Compile Include="Migrations\201804120347073_UptPart.Designer.cs">
+      <DependentUpon>201804120347073_UptPart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804120638033_UptCustomer.cs" />
+    <Compile Include="Migrations\201804120638033_UptCustomer.Designer.cs">
+      <DependentUpon>201804120638033_UptCustomer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804120805369_UptShipDetail.cs" />
+    <Compile Include="Migrations\201804120805369_UptShipDetail.Designer.cs">
+      <DependentUpon>201804120805369_UptShipDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804130123256_UptShipDetail1.cs" />
+    <Compile Include="Migrations\201804130123256_UptShipDetail1.Designer.cs">
+      <DependentUpon>201804130123256_UptShipDetail1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804131156457_UptShipDetailReasons.cs" />
+    <Compile Include="Migrations\201804131156457_UptShipDetailReasons.Designer.cs">
+      <DependentUpon>201804131156457_UptShipDetailReasons.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804131157130_UptShipDetailReasons2.cs" />
+    <Compile Include="Migrations\201804131157130_UptShipDetailReasons2.Designer.cs">
+      <DependentUpon>201804131157130_UptShipDetailReasons2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Affairs.cs" />
+    <Compile Include="Model\Categories.cs" />
+    <Compile Include="Model\Company.cs" />
+    <Compile Include="Model\Customer.cs" />
+    <Compile Include="Model\Depart.cs" />
+    <Compile Include="Model\Employee.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\Part.cs" />
+    <Compile Include="Model\ShipDetail.cs" />
+    <Compile Include="Model\ShipHead.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RossOADbContext.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201804070342316_InitDB.resx">
+      <DependentUpon>201804070342316_InitDB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804070800597_AddCategoryModel.resx">
+      <DependentUpon>201804070800597_AddCategoryModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804070803061_AddCategoryModel2.resx">
+      <DependentUpon>201804070803061_AddCategoryModel2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804090531595_AddCustCompany.resx">
+      <DependentUpon>201804090531595_AddCustCompany.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804111124434_ModShipHeadModel.resx">
+      <DependentUpon>201804111124434_ModShipHeadModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804111212019_ModShipHeadFielOrderNum.resx">
+      <DependentUpon>201804111212019_ModShipHeadFielOrderNum.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804120333310_UptShip.resx">
+      <DependentUpon>201804120333310_UptShip.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804120347073_UptPart.resx">
+      <DependentUpon>201804120347073_UptPart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804120638033_UptCustomer.resx">
+      <DependentUpon>201804120638033_UptCustomer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804120805369_UptShipDetail.resx">
+      <DependentUpon>201804120805369_UptShipDetail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804130123256_UptShipDetail1.resx">
+      <DependentUpon>201804130123256_UptShipDetail1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804131156457_UptShipDetailReasons.resx">
+      <DependentUpon>201804131156457_UptShipDetailReasons.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804131157130_UptShipDetailReasons2.resx">
+      <DependentUpon>201804131157130_UptShipDetailReasons2.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ross.OA\Ross.OA.csproj">
+      <Project>{8865240b-ba26-4e98-9a1c-5937aac496dd}</Project>
+      <Name>Ross.OA</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

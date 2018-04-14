@@ -1,0 +1,222 @@
+﻿
+@{
+    ViewBag.Title = "SysConfig";
+    Layout = "~/Views/Shared/_LayoutPageInner.cshtml";
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        常规设置
+        <small>MailBox</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Dashboard/"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">常规设置</li>
+    </ol>
+</section>
+<section class="content" style="min-height: 600px">
+    <div class="nav-tabs-custom">
+        <!-- Tabs within a box -->
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab1" data-toggle="tab">公司设置</a></li>
+            <li><a href="#tab2" data-toggle="tab">部门设置</a></li>
+        </ul>
+        <div class="tab-content no-padding">
+            <div class="tab-pane active" id="tab1" style="position: relative;">
+                <div class="box no-border">
+                    <div class="box-header">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default" id="BtnEdit" onclick="SetiframeSrc('/Company/Edit/0',408)"><i class="fa fa-file"></i></button>
+                            <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="刷新" onclick="RefreshCompData()"><i class="fa fa-refresh"></i></button>
+                        </div>
+                    </div>
+                    <div id="CompanyDt">
+                        <div class="box-body table-responsive no-padding">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th>公司名称</th>
+                                    <th>公司代码</th>
+                                    <th>有效</th>
+                                    <th>操作</th>
+                                </tr>
+                                <tr v-for="item in mydata">
+                                    <td>{{item.CompanyName}}</td>
+                                    <td>{{item.CompanyCode}}</td>
+                                    <td>{{item.IsActive}}</td>
+                                    <td>
+                                        <a class="btn btn-danger btn-xs" href="#" v-on:click="udelete(item.Id)">删除</a>
+                                        <a class="btn btn-success btn-xs" href="#" v-on:click="uedit(item.Id)" data-toggle="modal" data-target="#modal-default">编辑</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="tab2" style="position: relative;">
+                <div class="box no-border">
+                    <div class="box-header">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default" id="BtnEdit" onclick="SetiframeSrc('/Employee/EditDept/0',300)"><i class="fa fa-file"></i></button>
+                            <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="保存"><i class="fa fa-save"></i></button>
+                            <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="刷新" onclick="RefreshVueData()"><i class="fa fa-refresh"></i></button>
+                            <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-remove"></i></button>
+                        </div>
+                        <div class="box-tools">
+                            <div class="input-group input-group-sm" style="width: 150px;">
+                                <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+                                <div class="input-group-btn">
+                                    <input type="hidden" value="1" id="pageindex" />
+                                    <button type="button" class="btn btn-default" onclick="RefreshVueData()"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="DeptDt">
+                        <div class="box-body table-responsive no-padding">
+                            <table class="table table-hover DeptDt">
+                                <tr>
+                                    <th>公司</th>
+                                    <th>部门名称</th>
+                                    <th>部门代码</th>
+                                    <th>有效</th>
+                                    <th>操作</th>
+                                </tr>
+                                <tr v-for="item in mydata">
+                                    <td>{{item.Company}}</td>
+                                    <td>{{item.DepartName}}</td>
+                                    <td>{{item.DepartCode}}</td>
+                                    <td>{{item.IsActive}}</td>
+                                    <td>
+                                        <a class="btn btn-danger btn-xs" href="#" v-on:click="udelete(item.Id)">删除</a>
+                                        <a class="btn btn-success btn-xs" href="#" v-on:click="uedit(item.Id)" data-toggle="modal" data-target="#modal-default">编辑</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="box-footer clearfix">
+                            <ul class="pagination pagination-sm no-margin pull-right">
+                                <li><a href="#">&laquo;</a></li>
+                                <li v-for="value in pages"><a href="#" v-on:click="chgpage(value)">{{value}}</a></li>
+                                <li><a href="#">&raquo;</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">快速编辑</h4>
+            </div>
+            <div class="modal-body">
+                <iframe frameborder="0" scrolling="no" style="width:100%" src="" id="WinEdit"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+@section scripts{
+    <script>
+        var vmDept = new Vue({
+            el: '#DeptDt',
+            data: {
+                mydata: [],
+                pages: 0
+            },
+            methods: {
+                chgpage: function (p) {
+                    $('#pageindex').val(p);
+                    GetCustData(vmDept);
+                    return false;
+                },
+                uedit: function (_id) {
+                    SetiframeSrc('/Employee/EditDept/' + _id, 300);
+                },
+                udelete: function (_id) {
+                    confirmE('确定删除？', function () {
+                        $.ajax({
+                            url: '/Employee/DelDeptSoft',
+                            type: "POST",
+                            data: { id: _id },
+                            success: function (resp) {
+                                $.alert('删除成功!');
+                                GetCustData(vmDept);
+                            }
+                        });
+                    });
+                }
+            }
+        });
+
+        var vmComp = new Vue({
+            el: '#CompanyDt',
+            data: {
+                mydata: [],
+                pages: 0
+            },
+            methods: {
+                uedit: function (_id) {
+                    SetiframeSrc('/Company/Edit/' + _id, 408);
+                },
+                udelete: function (_id) {
+                    confirmE('确定删除？', function () {
+                        $.ajax({
+                            url: '/Company/Del',
+                            type: "POST",
+                            data: { id: _id },
+                            success: function (resp) {
+                                $.alert('删除成功!');
+                                GetCompData(vmComp);
+                            }
+                        });
+                    });
+                }
+            }
+        });
+
+        $(function () {
+            GetCustData(vmDept)
+            GetCompData(vmComp)
+        })
+        function SetiframeSrc(_url, H) {
+            $('#WinEdit').attr('src', _url);
+            $('#WinEdit').height(H);
+        }
+        function RefreshVueData() {
+            GetCustData(vmDept)
+        }
+        function RefreshCompData() {
+            GetCompData(vmComp)
+        }
+        function GetCustData(vm) {
+            var _page = parseInt($('#pageindex').val())
+            $.post('/Employee/GetListsDept',
+                { page: _page, pageSize: 20, keywords: $('input[name=table_search]').val() },
+                function (response) {
+                    Vue.set(vm, 'mydata', response.datas)
+                    Vue.set(vm, 'pages', response.pages)
+                });
+        }
+        function GetCompData(vm) {
+            $.post('/Company/GetLists',
+                { page: 1, pageSize: 50 },
+                function (response) {
+                    Vue.set(vm, 'mydata', response.datas)
+                    Vue.set(vm, 'pages', response.pages)
+                });
+        }
+    </script>
+}

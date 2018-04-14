@@ -1,0 +1,114 @@
+﻿
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_LayoutPageInner.cshtml";
+}
+<section class="content-header">
+    <h1>
+        分类管理
+        <small>Category Manage</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">分类管理</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="box box-primary" id="formArticleEdit">
+        <div class="box-header with-border">
+            <h3 class="box-title">分类管理</h3>
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+        <form role="form" id="formEdit">
+            <div class="box-body">
+                <div class="form-group">
+                    <label for="ParentId">上级分类</label>
+                    <select class="form-control" v-model="Category.ParentId">
+                        <option v-for="option in ParentLists" v-bind:value="option.Id">{{option.PrevStr}} {{option.CategoryName}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="CategoryName">分类名称</label>
+                    <input type="text" class="form-control" v-model="Category.CategoryName" placeholder="Enter CategoryName">
+                </div>
+                <div class="form-group">
+                    <label for="CategoryIndex">分类索引</label>
+                    <input type="text" class="form-control" v-model="Category.CategoryIndex" placeholder="Enter CategoryIndex">
+                </div>
+                <div class="form-group">
+                    <label for="Layout">所属模型</label>
+                    <select class="form-control" v-model="Category.Layout">
+                        <option value="Articles" selected="selected">内容模型</option>
+                        <option value="Products">产品模型</option>
+                        <option value="Menus">菜单模型</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Icons">图标</label>
+                    <input type="text" class="form-control" v-model="Category.Icons" placeholder="Enter Icons">
+                </div>
+                <div class="form-group">
+                    <label for="LinkUrl">链接</label>
+                    <input type="text" class="form-control" v-model="Category.LinkUrl" placeholder="Enter LinkUrl">
+                </div>
+                <div class="form-group">
+                    <label for="Intro">概述</label>
+                    <input type="text" class="form-control" v-model="Category.Intro" placeholder="Enter Intro">
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" v-model="Category.IsHide"> 隐藏
+                    </label>
+                    <label>
+                        <input type="checkbox" v-model="Category.IsDeleted"> 移除
+                    </label>
+                </div>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <input type="hidden" v-model="Category.Id">
+                <button type="button" class="btn btn-primary" v-on:click="dosubmit">确定</button>
+                <button type="button" class="btn btn-default" v-on:click="doback">返回</button>
+            </div>
+        </form>
+    </div>
+</section>
+<!-- /.content -->
+@section scripts{
+    <script>
+        $.post('/Category/GetModelWithParents', { id: @(ViewBag.Id) }, function (response) {
+            new Vue({
+                el: "#formEdit",
+                data: function () { return response },
+                methods: {
+                    updateData: function (data) {
+                        response.Category.ParentId = data;
+                    },
+                    dosubmit: function () {
+                        $.ajax({
+                            url: '/Category/InsertOrUpdate',
+                            type: "POST",
+                            data: response.Category,
+                            success: function (data) {
+                                toastr.options = {
+                                    "positionClass": "toast-top-right",
+                                }
+                                if (data.code == 100) {                                    
+                                    toastr.success('保存成功！');
+                                } else {
+                                    toastr.error(data.message);
+                                }
+                            }
+                        });
+                        return false;
+                    },
+                    doback: function () {
+                        window.location = '/Category/';
+                    }
+                }
+            })
+        });
+    </script>
+}

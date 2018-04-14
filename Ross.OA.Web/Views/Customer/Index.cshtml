@@ -1,0 +1,124 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPageInner.cshtml";
+}
+<section class="content-header">
+    <h1>
+        客户编辑
+        <small>Customer Manage</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Dashboard/"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">客户管理</li>
+    </ol>
+</section>
+<section class="content">
+    <div class="box no-border">
+        <div class="box-header">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default" id="BtnEdit" onclick="OpenPage('/Customer/Edit/0')"><i class="fa fa-file"></i></button>
+                <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="保存"><i class="fa fa-save"></i></button>
+                <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="刷新" onclick="RefreshVueData()"><i class="fa fa-refresh"></i></button>
+                <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-remove"></i></button>
+            </div>
+            <div class="box-tools">
+                <div class="input-group input-group-sm" style="width: 150px;">
+                    <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+                    <div class="input-group-btn">
+                        <input type="hidden" value="1" id="pageindex" />
+                        <button type="button" class="btn btn-default" onclick="RefreshVueData()"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="DataTable">
+            <div class="box-body table-responsive no-padding">
+                <table class="table table-hover">
+                    <tr>
+                        <th>公司</th>
+                        <th>客户ID</th>
+                        <th>客户代码</th>
+                        <th>客户名称</th>
+                        <th>联系人</th>
+                        <th>无效</th>
+                        <th>操作</th>
+                    </tr>
+                    <tr v-for="item in mydata">
+                        <td>{{item.Company}}</td>
+                        <td>{{item.CustID}}</td>
+                        <td>{{item.CustNum}}</td>
+                        <td>{{item.CustName}}</td>
+                        <td>{{item.Contactor}}</td>
+                        <td><input type="checkbox" v-bind:value="item.IsDeleted"></td>
+                        <td>
+                            <a class="btn btn-danger btn-xs" href="#" v-on:click="udelete(item.Id)">删除</a>
+                            <a class="btn btn-success btn-xs" href="#" v-on:click="uedit(item.Id)">编辑</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="box-footer clearfix">
+                <ul class="pagination pagination-sm no-margin pull-right">
+                    <li><a href="#">&laquo;</a></li>
+                    <li v-for="value in pages"><a href="#" v-on:click="chgpage(value)">{{value}}</a></li>
+                    <li><a href="#">&raquo;</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+@section scripts{
+    <script>
+        var vm = new Vue({
+            el: '#DataTable',
+            data: {
+                mydata: [],
+                pages: 0
+            },
+            methods: {
+                chgpage: function (p) {
+                    $('#pageindex').val(p);
+                    GetDataList(vm);
+                    return false;
+                },
+                uedit: function (_id) {
+                    OpenPage('/Customer/Edit/' + _id);
+                },
+                udelete: function (_id) {
+                    confirmE('确定删除？', function () {
+                        $.ajax({
+                            url: '/Customer/Del',
+                            type: "POST",
+                            data: { id: _id },
+                            success: function (resp) {
+                                $.alert('删除成功!');
+                                GetDataList(vm);
+                            }
+                        });
+                    });
+                }
+            }
+        });
+
+        $(function () {
+            GetDataList(vm)
+        })
+        function OpenPage(_url) {
+            window.location.href = _url;
+        }
+        function RefreshVueData() {
+            GetDataList(vm)
+        }
+        function GetDataList(vm) {
+            var _page = parseInt($('#pageindex').val())
+            $.post('/Customer/GetLists',
+                { page: _page, pageSize: 30, keywords: $('input[name=table_search]').val() },
+                function (response) {
+                    Vue.set(vm, 'mydata', response.datas)
+                    Vue.set(vm, 'pages', response.pages)
+                });
+        }
+    </script>
+}
+
