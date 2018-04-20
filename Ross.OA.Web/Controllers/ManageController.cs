@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace Ross.OA.Web.Controllers
 {
-    public class ManageController : Controller
+    public class ManageController : BaseController
     {
         public JsonResult Login(string UserName, string Password, string CompCode)
         {
@@ -30,6 +30,13 @@ namespace Ross.OA.Web.Controllers
                             AppBase.SetCookie("EmpId", model.Id.ToString(), 5);
                             AppBase.SetCookie("EmpName", model.UserName, 5);
                             AppBase.SetCookie("EmpUserId", model.UserId.ToString(), 5);
+                            AppBase.SetCookie("EmpDeptId", model.DepartId.ToString(), 5);
+
+                            var Dept = EmpServ.ReposityDept.Get(model.DepartId);
+                            if (Dept != null)
+                            {
+                                AppBase.SetCookie("EmpDeptName", HttpUtility.UrlEncode(Dept.DepartName), 5);
+                            }
                         }
                         else
                         {
@@ -107,5 +114,6 @@ namespace Ross.OA.Web.Controllers
             }
             EmpServ.Dispose();
         }
+                
     }
 }

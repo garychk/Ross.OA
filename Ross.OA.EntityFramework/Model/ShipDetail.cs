@@ -12,6 +12,8 @@ namespace Ross.OA.EntityFramework.Model
         [Required, MaxLength(8)]
         public string Company { get; set; }
         [Required, StringLength(50)]
+        public string ProductNum { get; set; }
+        [Required, StringLength(50)]
         public string PartNum { get; set; }
         [Required, StringLength(500)]
         public string PartDesc { get; set; }
@@ -36,6 +38,8 @@ namespace Ross.OA.EntityFramework.Model
         [ForeignKey("ShipID")]
         public ShipHead ShipHd { get; set; }
         public bool IsConfirm { get; set; }
+        [StringLength(20)]
+        public string EnterPerson { get; set; }
 
     }
 }

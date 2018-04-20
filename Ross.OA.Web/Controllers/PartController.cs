@@ -33,12 +33,12 @@ namespace Ross.OA.Web.Controllers
         {
             throw new NotImplementedException();
         }
-
+        [Filters.FilterCheckPower]
         public ActionResult Index()
         {
             return View();
         }
-
+        [Filters.FilterCheckPower]
         public ActionResult SyncERP()
         {
             return View();

@@ -20,17 +20,20 @@
             <div class="box-header">
                 <div class="btn-group">
                     <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="新建"><i class="fa fa-file"></i></button>
-                    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="保存"><i class="fa fa-save"></i></button>
-                    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="撤销"><i class="fa fa-reply"></i></button>
+                    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="新建分录" onclick="GetNewDetail()"><i class="fa fa-files-o"></i></button>
+                    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="导入"><i class="fa fa-level-up" data-toggle="modal" data-target="#modal-default" ></i></button>
+                    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="导出" onclick="ExportExcel()"><i class="fa fa-level-down"></i></button>
                     <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="刷新" onclick="GetDatas()"><i class="fa fa-refresh"></i></button>
-                    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-remove"></i></button>
+                    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="删除" onclick="DelShipDT()"><i class="fa fa-remove"></i></button>
+                    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="预览" onclick="GoView()"><i class="fa fa-location-arrow"></i></button>
+                    @Html.ActionLink("导出", "ExportExcel", new { shipid = ViewBag.Id }, new { @class = "hidden", @id = "ExportLink" })
                 </div>
             </div>
             <div class="box-body">
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#tab1" data-toggle="tab">表头</a></li>
-                        <li><a href="#tab2" data-toggle="tab">分录明细</a></li>
+                        <li><a href="#tab2" data-toggle="tab" id="TabTit2">分录明细</a></li>
                         <li><a href="#tab3" data-toggle="tab">分录列表</a></li>
                         <li><a href="#tab4" data-toggle="tab">备注</a></li>
                     </ul>
@@ -54,13 +57,23 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        <label for="ProductNum" class="col-sm-2 control-label">产品号</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" v-model="ShipHd.ProductNum">
+                                        </div>
+                                        <label for="ProductQty" class="col-sm-2 control-label">数量</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" v-model="ShipHd.ProductQty">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="" class="col-sm-2 control-label">发货日期</label>
                                         <div class="col-sm-10">
                                             <div class="input-group">
                                                 <div class="input-group-addon">
                                                     <i class="fa fa-calendar"></i>
                                                 </div>
-                                                <input type="text" class="form-control" v-model="ShipHd.OrderDate" data-inputmask="'alias': 'yyyy/mm/dd'" data-mask>
+                                                <input type="text" class="form-control datepicker" v-model="ShipHd.OrderDate">
                                             </div>
                                         </div>
                                     </div>
@@ -71,7 +84,7 @@
                                                 <div class="input-group-addon">
                                                     <i class="fa fa-calendar"></i>
                                                 </div>
-                                                <input type="text" class="form-control" v-model="ShipHd.PromiseDate" data-inputmask="'alias': 'yyyy/mm/dd'" data-mask>
+                                                <input type="text" class="form-control datepicker" v-model="ShipHd.PromiseDate" >
                                             </div>
                                         </div>
                                     </div>
@@ -92,7 +105,7 @@
                                     <div class="form-group">
                                         <label for="Address1" class="col-sm-2 control-label">收货地址</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" readonly="readonly" v-model="Customer.Address1">
+                                            <input type="text" class="form-control" v-model="Customer.Address1">
                                         </div>
                                     </div>
                                 </div>
@@ -106,29 +119,32 @@
                                     <div class="form-group">
                                         <label for="IsConfirm" class="col-sm-2 control-label">订单确认</label>
                                         <div class="col-sm-1">
-                                            <div class="checkbox icheck">
-                                                <input type="checkbox" checked="checked" v-model="ShipHd.IsConfirm">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" checked="checked" v-model="ShipHd.IsConfirm">
+                                                </label>
                                             </div>
                                         </div>
                                         <label class="col-sm-2  control-label">订单状态</label>
                                         <div class="col-sm-5">
-                                            <span class="label label-success">批准</span>
-                                            <span class="label label-info">待批准</span>
-                                            <span class="label label-warning">未提交</span>
-                                            <span class="label label-danger">拒绝</span>
+                                            <button type="button" v-if="ShipHd.ApproveStatus === 'A'" class="btn btn-success btn-sm" onclick="SubmitApprv('A')">批准</button>
+                                            <button type="button" v-if="ShipHd.ApproveStatus === 'R'" class="btn btn-danger btn-sm" onclick="SubmitApprv('R')">拒绝</button>
+                                            <button type="button" v-if="ShipHd.ApproveStatus === 'P'" class="btn btn-info btn-sm" onclick="SubmitApprv('P')">待批准</button>
+                                            <button type="button" v-else class="btn btn-warning btn-sm" onclick="SubmitApprv('P')">未提交</button>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="ShipviaCode" class="col-sm-2 control-label">运输方式</label>
                                         <div class="col-sm-10">
                                             <select class="form-control select2 ShipviaCode" v-model="ShipHd.ShipviaCode">
-                                                <option value="express">快递</option>
-                                                <option value="logistics">物流</option>
+                                                <option value="快递">快递</option>
+                                                <option value="物流">物流</option>
+                                                <option value="出差附带">出差附带</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="RespDepartCodes" class="col-sm-2 control-label">责任部门</label>
+                                        <label for="RespDepartCodes" class="col-sm-2 control-label">责任方</label>
                                         <div class="col-sm-10">
                                             <select class="form-control select2 RespDepartCodes" multiple>
                                                 <option v-for="option in Departs" v-bind:value="option.Id">{{option.DepartName}}</option>
@@ -141,6 +157,16 @@
                                             <input type="text" class="form-control" v-model="ShipHd.EnterPerson" readonly="readonly">
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <label for="ShipSize" class="col-sm-2 control-label">尺寸</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" v-model="ShipHd.ShipSize">
+                                        </div>
+                                        <label for="ShipWeight" class="col-sm-2 control-label">重量</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" v-model="ShipHd.ShipWeight">
+                                        </div>                                        
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -148,18 +174,32 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="SONum" class="col-sm-2 control-label">订单号</label>
-                                        <div class="col-sm-4">
-                                            <input type="text" class="form-control" v-model="ShipDetail.SONum">
-                                            <input type="hidden" v-model="ShipDetail.Id" />
+                                        <label for="ReasonCode" class="col-sm-2 control-label">分录选择</label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control ShipDTSelect" style="width:100%">
+                                                <option v-for="value in ShipDetailCount" v-bind:value="value-1">{{value}}</option>
+                                            </select>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
                                     <div class="form-group">
+                                        <label for="SONum" class="col-sm-2 control-label">订单号</label>
+                                        <div class="col-sm-3">
+                                            <input type="text" class="form-control" v-model="ShipDetail.SONum">
+                                            <input type="hidden" class="ShipDTId" v-model="ShipDetail.Id" />
+                                        </div>
+                                        <label for="ProductNum" class="col-sm-2 control-label">产品号</label>
+                                        <div class="col-sm-5">
+                                            <input type="text" class="form-control" v-model="ShipDetail.ProductNum">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">                                        
                                         <label for="PartNum" class="col-sm-2 control-label">物料编码</label>
                                         <div class="col-sm-6">
-                                            <select class="form-control PartNum" v-model="ShipDetail.PartNum" style="width:100%">
-                                                <option v-for="option in PartItems" v-bind:value="option.PartNum">{{option.PartNum}}</option>
-                                            </select>
+                                            <input type="text" class="form-control PartNum" v-model="ShipDetail.PartNum">
                                         </div>
                                         <div class="col-sm-4">
                                             <input type="text" class="form-control IUM" readonly="readonly" v-model="ShipDetail.IUM">
@@ -173,26 +213,16 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="PartModel" class="col-sm-2 control-label">型号</label>
-                                        <div class="col-sm-10">
+                                        <div class="col-sm-4">
                                             <input type="text" class="form-control" v-model="ShipDetail.PartModel">
                                         </div>
-                                    </div>
-                                    <div class="form-group">
                                         <label for="ShipQty" class="col-sm-2 control-label">数量</label>
-                                        <div class="col-sm-10">
+                                        <div class="col-sm-4">
                                             <input type="text" class="form-control" v-model="ShipDetail.ShipQty">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="ReasonCode" class="col-sm-2 control-label">原因代码</label>
-                                        <div class="col-sm-10">
-                                            <select class="form-control select2 ReasonCode" v-model="ShipDetail.ReasonCode" style="width:100%">
-                                                <option v-for="option in Reasons" v-bind:value="option.ReasonCode">{{option.ReasonDesc}}</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                <div class="col-md-6">                                    
                                     <div class="form-group">
                                         <label for="Reasons" class="col-sm-2 control-label">原因</label>
                                         <div class="col-sm-10">
@@ -200,7 +230,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="RespDepartCodesDT" class="col-sm-2 control-label">责任部门</label>
+                                        <label for="RespDepartCodesDT" class="col-sm-2 control-label">责任方</label>
                                         <div class="col-sm-10">
                                             <select class="form-control select2 RespDepartCodesDT" style="width:100%" multiple>
                                                 <option v-for="option in Departs" v-bind:value="option.Id">{{option.DepartName}}</option>
@@ -208,18 +238,28 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        <label for="EnterPerson" class="col-sm-2 control-label">录入员</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" v-model="ShipDetail.EnterPerson" readonly="readonly">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="OpenLine" class="col-sm-2 control-label">未结</label>
                                         <div class="col-sm-3">
-                                            <label class="checkbox icheck">
-                                                <input type="checkbox" v-model="ShipDetail.OpenLine">
-                                                <input type="hidden" id="ShipID" v-model="ShipDetail.ShipID" />
-                                            </label>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" v-model="ShipDetail.OpenLine">
+                                                    <input type="hidden" id="ShipID" v-model="ShipDetail.ShipID" />
+                                                </label>
+                                            </div>
                                         </div>
                                         <label for="IsConfirm" class="col-sm-2 control-label">确认发货</label>
                                         <div class="col-sm-3">
-                                            <label class="checkbox icheck">
-                                                <input type="checkbox" v-model="ShipDetail.IsConfirm">
-                                            </label>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" v-model="ShipDetail.IsConfirm">
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -229,24 +269,31 @@
                             <div class="box-body table-responsive no-padding">
                                 <table class="table table-hover">
                                     <tr>
-                                        <th>公司</th>
+                                        <th>选择</th>                                        
                                         <th>物料编码</th>
-                                        <th style="width:220px">物料名称</th>
+                                        <th>变更</th>
+                                        <th style="width:180px">物料名称</th>
                                         <th>型号</th>
                                         <th>数量</th>
                                         <th>SO号</th>
-                                        <th style="width:240px">原因</th>
+                                        <th style="width:220px">原因</th>
                                         <th>责任部门</th>
+                                        <th>确认</th>
                                     </tr>
                                     <tr v-for="item in ShipDetailList">
-                                        <td>{{item.Company}}</td>
+                                        <td><input type="checkbox" v-bind:value="item.Id" /></td>
                                         <td>{{item.PartNum}}</td>
+                                        <td><a v-bind:href="'/Affair/Lists/?cntnum='+ShipHd.ContractNum+'&partnum='+item.PartNum"  v-bind:class="item.affairCount<=0?'hidden':''"  v-bind:title="item.affairCount+'条变更记录'"><i class="badge bg-red">{{item.affairCount}}</i></a></td>
+                                        
                                         <td>{{item.PartDesc}}</td>
                                         <td>{{item.PartModel}}</td>
                                         <td><span class="label label-success">{{item.ShipQty}}</span></td>
                                         <td>{{item.SONum}}</td>
                                         <td>{{item.Reasons}}</td>
-                                        <td>{{item.RespDepartCodes}}</td>
+                                        <td>{{item.RespDepartNames}}</td>
+                                        <td><label v-if="item.IsConfirm === true"><input type="checkbox" checked="checked" /></label>
+                                            <label v-else ><input type="checkbox" /></label>
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
@@ -265,17 +312,39 @@
         </div>
     </form>
 </section>
+
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">导入</h4>
+            </div>
+            <div class="modal-body">
+                <iframe frameborder="0" scrolling="no" style="width:100%; height:240px" src="/Ship/ImportDT/@(ViewBag.Id)" id="WinEdit"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 @section css{
     <link rel="stylesheet" href="/Contents/bower_components/select2/dist/css/select2.min.css">
     <link rel="stylesheet" href="/Contents/plugins/iCheck/all.css" />
+    <link rel="stylesheet" href="/Contents/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
 }
 @section scripts{
-    <script src="/Contents/plugins/input-mask/jquery.inputmask.js"></script>
-    <script src="/Contents/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
-    <script src="/Contents/plugins/input-mask/jquery.inputmask.extensions.js"></script>
     <script src="/Contents/bower_components/select2/dist/js/select2.full.min.js"></script>
     <script src="/Contents/plugins/iCheck/icheck.min.js"></script>
+    <script src="/Contents/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="/Contents/bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.zh-CN.min.js"></script>
     <script>
+        var _id='@(ViewBag.Id)';
         var datas = {
             ShipHd: [],
             ShipDetail: {},
@@ -284,20 +353,24 @@
             Customer:[],
             PartItems: [],
             Reasons: [],
-            ShipDetailList: []
+            ShipDetailList: [],
+            ShipDetailCount:0
         }
-
+        localStorage.DetailItem=0;
         $(function () {
-            $('[data-mask]').inputmask()
+            $('.datepicker').datepicker({
+                autoclose: true,
+                todayHighlight: true,
+                language:"zh-CN",
+                format:"yyyy-mm-dd"
+            })
             $('.select2').select2()
             $('.icheck').iCheck({
                 checkboxClass: 'icheckbox_minimal-blue',
                 radioClass: 'iradio_minimal-blue'
             });
 
-            GetDatas();            
-
-            $(".PartNum").select2({
+            $(".PartNumSelect").select2({
                 placeholder: "输入关键词查询",
                 minimumInputLength: 3,
                 ajax: {
@@ -313,7 +386,7 @@
                         };
                     },
                     processResults: function (data, params) {
-                        var lists = [];                        
+                        var lists = [];
                         var total = data.total;
                         data.datas.forEach(function(e) {
                             lists.push({
@@ -327,14 +400,14 @@
                 }
             });
 
-            $(".PartNum").on("change", function(e)
+            $(".PartNum").on("blur", function(e)
             {
-                var obj=$(".PartNum").select2("data")[0]
-                $('.PartDesc').val(obj.desc)
-                $('.IUM').val(obj.ium)
-                datas.ShipDetail.PartDesc=obj.desc
-                datas.ShipDetail.IUM=obj.ium
-                datas.ShipDetail.PartNum = obj.id
+                var _keyw=$(this).val();
+                GetPart(_keyw);
+            })
+            $(".PartNum").on("keyup", function (e) {
+                var _keyw = $(this).val();
+                GetPart(_keyw);
             })
 
             $(".CustID").on("change",function(e){
@@ -342,37 +415,56 @@
             })
             $(".ShipviaCode").on("change",function(e){
                 datas.ShipHd.ShipviaCode = $(this).val();
-            })            
+            })
+            $(".ShipDTSelect").on("change",function(e){
+                localStorage.DetailItem = $(this).val();
+                GetDatas();
+            })
+
+            GetDatas();
+
+            var GetPart = function (_keyw) {
+                if (_keyw.length >= 13) {
+                    $.post('/Part/GetPartSelect', {
+                        keywords: _keyw,
+                        page: 1,
+                        pageSize: 1
+                    }, function (response) {
+                        if (response.total > 0) {
+                            datas.ShipDetail.PartDesc = response.datas[0].PartDesc
+                            datas.ShipDetail.IUM = response.datas[0].IUM
+                        } else {
+                            $.alert('无此物料！');
+                        }
+                    })
+                }
+            }
         })
-        
+
         function GetDatas(){
-            $.post('/Ship/GetModel', { id: @(ViewBag.Id) }, function (response) {
-                datas.ShipHd = response;                
+            $.post('/Ship/GetModel', { id: _id }, function (response) {
+                datas.ShipHd = response;
                 if (datas.ShipHd.RespDepartCodes != null)
                     $(".RespDepartCodes").val(datas.ShipHd.RespDepartCodes.split(",")).trigger('change');
                 if (datas.ShipHd.ShipviaCode != null)
                     $(".ShipviaCode").val(datas.ShipHd.ShipviaCode).trigger('change');
 
-                $.post('/Customer/GetModel', { id: response.CustID }, function (response) {
-                    datas.Customer = response;
+                $.post('/Customer/GetModel', { id: response.CustID }, function (resp) {
+                    datas.Customer = resp;
                 })
                 if(datas.ShipHd.Id==0)
                 {
-                    $.post('/Ship/GetOrderNum', { }, function (response) {
-                        datas.ShipHd.OrderNum = response;
+                    $.post('/Ship/GetOrderNum', { }, function (resp) {
+                        datas.ShipHd.OrderNum = resp;
                     })
                 }
-                $.post('/Ship/GetDetailLists', {page:1,pageSize:0, shipid:datas.ShipHd.Id }, function (response) {
-                    datas.ShipDetailList = response.datas;
-                    if(response.total>0){
-                        datas.ShipDetail = datas.ShipDetailList[0];
+                $.post('/Ship/GetDetailLists', {page:1,pageSize:0, shipid:datas.ShipHd.Id }, function (resp) {
+                    datas.ShipDetailList = resp.datas;
+                    datas.ShipDetailCount = resp.total;
+                    if(resp.total>0){
+                        datas.ShipDetail = datas.ShipDetailList[localStorage.DetailItem];
                         if (datas.ShipDetail.RespDepartCodes != null)
                             $(".RespDepartCodesDT").val(datas.ShipDetail.RespDepartCodes.split(",")).trigger('change');
-                        if (datas.ShipDetail.PartNum != null){
-                            var option = new Option(datas.ShipDetail.PartNum, datas.ShipDetail.PartNum, true, true);
-                            $(".PartNum").append(option);
-                            $(".PartNum").val(datas.ShipDetail.PartNum);
-                        }
                     }
                 })
             })
@@ -382,55 +474,122 @@
             })
             $.post('/Customer/GetLists', { page:1, pageSize:0 }, function (response) {
                 datas.CustomerItems = response.datas;
-            })           
+            })
         }
         var vm = new Vue({
             el: "#formEdit",
             data: datas,
             methods: {
-                Init: function () {
-                },
                 dosubmit: function () {
                     datas.ShipHd.CustID = $(".CustID").select2("val");
                     datas.ShipHd.ShipviaCode = $(".ShipviaCode").select2("val");
                     datas.ShipHd.RespDepartCodes = $('.RespDepartCodes').select2("val").join(",");
-
-                    datas.ShipDetail.PartNum = $(".PartNum").select2("val");
-                    datas.ShipDetail.ReasonCode = $(".ReasonCode").select2("val");
                     datas.ShipDetail.RespDepartCodes = $('.RespDepartCodesDT').select2("val").join(",");
-                                        
-                    var dto={}
-                    dto["ShipHd"] = datas.ShipHd;
-                    dto["ShipDt"] = datas.ShipDetail;
+
+                    //var dto={}
+                    //dto["ShipHd"] = datas.ShipHd;
+                    //dto["ShipDt"] = datas.ShipDetail;
 
                     $.ajax({
                         url: '/Ship/InsertOrUpdateHD',
                         type: "POST",
-                        data: dto,
+                        data: datas.ShipHd,
                         success: function (resp) {
                             toastr.options = {
                                 "positionClass": "toast-top-right",
                             }
                             if (resp.code == 100) {
-                                toastr.success('保存成功！');
+                                toastr.success('表头保存成功！');
                                 datas.ShipHd.Id = resp.datas;
-                                $.post('/Ship/GetDetailLists', {
-                                    page:1,pageSize:0, 
-                                    shipid:resp.datas }, function (response) {
-                                    datas.ShipDetailList = response.datas;
-                                })
-                            } else {
+                                datas.ShipDetail.ShipID = datas.ShipHd.Id;
+                                if (datas.ShipDetail.ShipID > 0 && datas.ShipDetail.PartNum!=null) {
+                                    $.ajax({
+                                        url: '/Ship/InsertOrUpdateDT',
+                                        type: "POST",
+                                        data: datas.ShipDetail,
+                                        success: function (resp) {
+                                            if (resp.code == 100) {
+                                                toastr.success('分录保存成功！');
+                                                datas.ShipDetail.Id = resp.datas;
+                                                $.post('/Ship/GetDetailLists', {
+                                                    page: 1, pageSize: 0,
+                                                    shipid: datas.ShipHd.Id
+                                                }, function (response) {
+                                                    datas.ShipDetailList = response.datas;
+                                                })
+                                            }
+                                            else if (resp.code == 104) {
+                                                toastr.warning('您无权修改分录项目！');
+                                            } else {
+                                                toastr.error(resp.message);
+                                            }
+                                        }
+                                    })
+                                }
+                                
+                            }
+                            else if(resp.code == 104){
+                                toastr.warning('您无权修改表头！');
+                            }
+                            else{
                                 toastr.error(resp.message);
                             }
                         }
                     });
-
-                    
                     return false;
                 }
             }
         })
-        vm.Init()
+
+        function GetNewDetail(){
+            $.post('/Ship/GetNewDetail', { }, function (response) {
+                datas.ShipDetail=response;
+                $(".RespDepartCodesDT").val("").trigger('change');
+            })
+            $('#TabTit2').click();
+        }
+
+        function GoView()
+        {
+            window.location.href="/Ship/Detail/"+_id;
+        }
+
+        function DelShipDT()
+        {
+            confirmE('确定删除？', function () {
+                var _id = $('.ShipDTId').val();
+                $.ajax({
+                    url: '/Ship/DelDT',
+                    type: "POST",
+                    data: { id: _id },
+                    success: function (resp) {
+                        if(resp.code == 100){
+                            $.alert('删除成功!');
+                            GetDatas();
+                        }
+                        else if(resp.code == 104)
+                        {
+                            toastr.warning('您无权删除他人项目！');
+                        }
+                        else if(resp.code == 500)
+                        {
+                            toastr.error(resp.message);
+                        }
+                        else{
+                            toastr.info(resp.message);
+                        }
+                    }
+                });
+            });
+        }
+
+        function SubmitApprv(apst){
+
+        }
+
+        function ExportExcel() {
+            window.location.href = "/Ship/ExportExcel?shipid="+_id;
+        }
     </script>
 }
 

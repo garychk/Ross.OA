@@ -12,9 +12,11 @@ namespace Ross.OA.Web.AutoMapper.Profiles
         public ShipProfile()
         {
             CreateMap<ShipHead, Dto.ShipHdDto>();
-            CreateMap<ShipHead, Dto.ShipHdInput>();
-            CreateMap<Dto.ShipHdInput, ShipHead>();
+            CreateMap<ShipHead, Dto.ShipHdOutput>();
+            CreateMap<Dto.ShipHdOutput, ShipHead>();
             CreateMap<Part, Dto.PartSelect>();
+            CreateMap<ShipDetail, Dto.ShipDetailOutput>();
+            CreateMap<Affairs, Dto.AffairOutput>();
         }
     }
 }

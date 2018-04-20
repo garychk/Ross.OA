@@ -14,11 +14,12 @@ namespace Ross.OA.Web.Controllers
     [Filters.FilterCheckLogin]
     public class CustomerController : BaseController, IControllerBase<Customer, int>
     {
-        // GET: Customer
+        [Filters.FilterCheckPower]
         public ActionResult Index()
         {
             return View();
         }
+        [Filters.FilterCheckPower]
         public ActionResult Edit(int id)
         {
             ViewBag.Id = id;
@@ -44,7 +45,7 @@ namespace Ross.OA.Web.Controllers
             {
                 try
                 {
-                    input.Company = Company;
+                    input.Company = BaseComp;
                     ObjServ.Reposity.InsertOrUpdate(input);
                     result.code = 100;
                     result.message = "ok";
@@ -63,11 +64,11 @@ namespace Ross.OA.Web.Controllers
             ResultDto<List<Customer>> result = new ResultDto<List<Customer>>();
             if (!string.IsNullOrEmpty(keywords))
             {
-                result = CustServ.Reposity.GetPageList(page, pageSize, (o => o.Company == Company && (o.CustName.Contains(keywords) || o.CustID == keywords || o.CustNum == keywords)));
+                result = CustServ.Reposity.GetPageList(page, pageSize, (o => o.Company == BaseComp && (o.CustName.Contains(keywords) || o.CustID == keywords || o.CustNum == keywords)));
             }
             else
             {
-                result = CustServ.Reposity.GetPageList(page, pageSize, (o => o.Company == Company));
+                result = CustServ.Reposity.GetPageList(page, pageSize, (o => o.Company == BaseComp));
             }
             CustServ.Dispose();
             return Json(result);

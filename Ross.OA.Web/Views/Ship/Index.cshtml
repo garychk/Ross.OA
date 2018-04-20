@@ -19,7 +19,7 @@
     <div class="box">
         <div class="box-header  with-border">
             <div class="btn-group">
-                <a href="/Ship/Edit/0" class="btn btn-default" id="BtnEdit"><i class="fa fa-file"></i></a>
+                <a href="/Ship/Edit/0" class="btn btn-default"  data-toggle="tooltip" data-placement="top" title="新建"><i class="fa fa-file"></i></a>
                 <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="保存"><i class="fa fa-save"></i></button>
                 <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="刷新" onclick="GetDataList()"><i class="fa fa-refresh"></i></button>
                 <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-remove"></i></button>
@@ -41,18 +41,29 @@
                 <thead>
                     <tr>
                         <th>公司</th>
-                        <th>订单号</th>
+                        <th>合同号</th>
+                        <th>变更</th>
                         <th>订单时间</th>
                         <th>运输方式</th>
+                        <th>录入者</th>
+                        <th>状态</th>
                         <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="item in mydata">
                         <td>{{item.Company}}</td>
-                        <td>{{item.OrderNum}}</td>
-                        <td>{{item.OrderDate}}</td>
+                        <td>{{item.ContractNum}}</td>
+                        <td><a v-bind:href="'/Affair/Lists/?cntnum='+item.ContractNum" v-bind:class="item.affairCount<=0?'hidden':''" v-bind:title="item.affairCount+'条变更记录'"><i class="badge bg-red">{{item.affairCount}}</i></a></td>
+                        <td>{{item.OrderDate}}</td>                        
                         <td>{{item.ShipviaCode}}</td>
+                        <td>{{item.EnterPerson}}</td>
+                        <td>
+                            <span v-if="item.ApproveStatus === 'A'" class="badge bg-green">批准</span>
+                            <span v-else-if="item.ApproveStatus === 'R'" class="badge bg-red">拒绝</span>
+                            <span v-else-if="item.ApproveStatus === 'P'" class="badge bg-light-blue">待批准</span>
+                            <span v-else class="badge bg-yellow">未提交</span>
+                        </td>
                         <td>
                             <a class="btn btn-danger btn-xs" href="#" v-on:click="udelete(item.Id)">删除</a>
                             <a class="btn btn-primary btn-xs" href="#" v-on:click="updateu(item.Id)">编辑</a>
@@ -63,10 +74,11 @@
         </div>
         <!-- /.box-body -->
         <div class="box-footer clearfix">
+            页码：{{pageindex}}/{{totalpages}}
             <ul class="pagination pagination-sm no-margin pull-right">
-                <li><a href="#">&laquo;</a></li>
-                <li v-for="value in pages"><a href="#" v-on:click="chgpage(value)">{{value}}</a></li>
-                <li><a href="#">&raquo;</a></li>
+                <li v-bind:class="pageindex<=1? 'hidden' : ''" onclick="turnpage(-1)"><a href="#">&laquo;</a></li>
+                <li v-for="value in pages" v-bind:class="value==pageindex? 'active' : ''"><a href="#" v-on:click="chgpage(value)">{{value}}</a></li>
+                <li v-bind:class="pageindex==totalpages? 'hidden' : ''" onclick="turnpage(1)"><a href="#">&raquo;</a></li>
             </ul>
         </div>
         </div>
@@ -88,7 +100,9 @@
             el: '#DataTable',
             data: {
                 mydata: [],
-                pages: 0
+                pages: 0,
+                totalpages: 1,
+                pageindex: 1
             },
             methods: {
                 initDatas: function () {
@@ -107,8 +121,19 @@
                             type: "POST",
                             data: { id: _id },
                             success: function (resp) {
-                                $.alert('删除成功!');
-                                GetDataList();
+                                if (resp.code == 100) {
+                                    $.alert('删除成功!');
+                                    GetDataList();
+                                }
+                                else if (resp.code == 104) {
+                                    toastr.warning('您无权删除他人项目！');
+                                }
+                                else if (resp.code == 500) {
+                                    toastr.error(resp.message);
+                                }
+                                else {
+                                    toastr.info(resp.message);
+                                }
                             }
                         });
                     });
@@ -126,8 +151,17 @@
             var _key = $('input[name=table_search]').val()
             $.post('/Ship/GetLists', { page: 1, pageSize: 50, keywords: _key }, function (response) {
                 Vue.set(vm, 'mydata', response.datas)
-                Vue.set(vm, 'pages', response.pages)
+                Vue.set(vm, 'totalpages', response.pages)
+                Vue.set(vm, 'pages', response.pages > 10 ? 10 : response.pages)
+                Vue.set(vm, 'pageindex', _page)
             });
+        }
+
+        function turnpage(val) {
+            var _page = parseInt($('#pageindex').val());
+            _page = _page + val;
+            $('#pageindex').val(_page);
+            GetDataList();
         }
     </script>
 }

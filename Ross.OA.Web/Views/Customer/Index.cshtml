@@ -59,10 +59,11 @@
                 </table>
             </div>
             <div class="box-footer clearfix">
+                页码：{{pageindex}}/{{totalpages}}
                 <ul class="pagination pagination-sm no-margin pull-right">
-                    <li><a href="#">&laquo;</a></li>
-                    <li v-for="value in pages"><a href="#" v-on:click="chgpage(value)">{{value}}</a></li>
-                    <li><a href="#">&raquo;</a></li>
+                    <li v-bind:class="pageindex<=1? 'hidden' : ''"><a href="#" onclick="turnpage(-1)">&laquo;</a></li>
+                    <li v-for="value in pages" v-bind:class="value==pageindex? 'active' : ''"><a href="#" v-on:click="chgpage(value)">{{value}}</a></li>
+                    <li v-bind:class="pageindex==totalpages? 'hidden' : ''"><a href="#" onclick="turnpage(1)">&raquo;</a></li>
                 </ul>
             </div>
         </div>
@@ -74,7 +75,9 @@
             el: '#DataTable',
             data: {
                 mydata: [],
-                pages: 0
+                pages: 0,
+                totalpages: 0,
+                pageindex:1
             },
             methods: {
                 chgpage: function (p) {
@@ -113,11 +116,20 @@
         function GetDataList(vm) {
             var _page = parseInt($('#pageindex').val())
             $.post('/Customer/GetLists',
-                { page: _page, pageSize: 30, keywords: $('input[name=table_search]').val() },
+                { page: _page, pageSize: 10, keywords: $('input[name=table_search]').val() },
                 function (response) {
                     Vue.set(vm, 'mydata', response.datas)
-                    Vue.set(vm, 'pages', response.pages)
+                    Vue.set(vm, 'totalpages', response.pages)
+                    Vue.set(vm, 'pages', response.pages > 10 ? 10 : response.pages)
+                    Vue.set(vm, 'pageindex', _page)
                 });
+        }
+        function turnpage(val)
+        {
+            var _page = parseInt($('#pageindex').val());
+            _page = _page + val;
+            $('#pageindex').val(_page);
+            GetDataList(vm);
         }
     </script>
 }

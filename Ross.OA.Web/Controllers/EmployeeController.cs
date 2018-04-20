@@ -13,11 +13,13 @@ namespace Ross.OA.Web.Controllers
 {
     [Filters.FilterCheckLogin]
     public class EmployeeController : BaseController, IControllerBase<Employee, int>
-    {        
+    {
+        [Filters.FilterCheckPower]
         public ActionResult Index()
         {
             return View();
         }
+        [Filters.FilterCheckPower]
         public ActionResult Edit(int id)
         {
             ViewBag.Id = id;
@@ -71,9 +73,9 @@ namespace Ross.OA.Web.Controllers
             EmployeeService EmpServ = new EmployeeService();
             ResultDto<List<Employee>> result = new ResultDto<List<Employee>>();
             if (string.IsNullOrEmpty(keywords))
-                result = EmpServ.ReposityEmp.GetPageList(page, pageSize, (o => o.Company == Company));
+                result = EmpServ.ReposityEmp.GetPageList(page, pageSize, (o => o.Company == BaseComp));
             else
-                result = EmpServ.ReposityEmp.GetPageList(page, pageSize, (o => o.Company == Company && (o.UserName.Contains(keywords))));
+                result = EmpServ.ReposityEmp.GetPageList(page, pageSize, (o => o.Company == BaseComp && (o.UserName.Contains(keywords))));
             EmpServ.Dispose();
             return Json(result);
         }
@@ -82,9 +84,9 @@ namespace Ross.OA.Web.Controllers
             EmployeeService EmpServ = new EmployeeService();
             ResultDto<List<Depart>> result = new ResultDto<List<Depart>>();
             if (string.IsNullOrEmpty(keywords))
-                result = EmpServ.ReposityDept.GetPageList(page, pageSize, (o => o.Company == Company && o.IsDeleted == false));
+                result = EmpServ.ReposityDept.GetPageList(page, pageSize, (o => o.Company == BaseComp && o.IsDeleted == false));
             else
-                result = EmpServ.ReposityDept.GetPageList(page, pageSize, (o => o.Company == Company && o.IsDeleted == false && (o.DepartCode.Contains(keywords) || o.DepartName.Contains(keywords))));
+                result = EmpServ.ReposityDept.GetPageList(page, pageSize, (o => o.Company == BaseComp && o.IsDeleted == false && (o.DepartCode.Contains(keywords) || o.DepartName.Contains(keywords))));
             EmpServ.Dispose();
             return Json(result);
         }
@@ -117,7 +119,7 @@ namespace Ross.OA.Web.Controllers
             {
                 try
                 {
-                    input.Company = Company;
+                    input.Company = BaseComp;
                     EmpServ.ReposityEmp.InsertOrUpdate(input);
                     result.code = 100;
                     result.message = "ok";
@@ -137,7 +139,7 @@ namespace Ross.OA.Web.Controllers
             {
                 try
                 {
-                    input.Company = Company;
+                    input.Company = BaseComp;
                     EmpServ.ReposityDept.InsertOrUpdate(input);
                     result.code = 100;
                     result.message = "ok";
@@ -149,6 +151,28 @@ namespace Ross.OA.Web.Controllers
                 }
             }
             return Json(result);
-        }        
+        }
+
+        public JsonResult UpdateDeptPower(int DeptId, string Powers)
+        {
+            ResultDto<int> result = new ResultDto<int>();
+            using (EmployeeService EmpServ = new EmployeeService())
+            {
+                try
+                {
+                    var entity = EmpServ.ReposityDept.Get(DeptId);
+                    entity.Powers = Powers;
+                    EmpServ.ReposityDept.InsertOrUpdate(entity);
+                    result.code = 100;
+                    result.message = "ok";
+                }
+                catch (Exception ex)
+                {
+                    result.code = 500;
+                    result.message = ex.Message;
+                }
+            }
+            return Json(result);
+        }
     }
 }

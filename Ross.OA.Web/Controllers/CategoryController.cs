@@ -14,10 +14,12 @@ namespace Ross.OA.Web.Controllers
     [Filters.FilterCheckLogin]
     public class CategoryController : BaseController, IControllerBase<Categories, int>
     {
+        [Filters.FilterCheckPower]
         public ActionResult Index()
         {
             return View();
         }
+        [Filters.FilterCheckPower]
         public ActionResult Edit(int id)
         {
             ViewBag.Id = id;
@@ -44,7 +46,7 @@ namespace Ross.OA.Web.Controllers
         public JsonResult GetLists(int page, int pageSize, string keywords = "")
         {
             CategoryService Category = new CategoryService();
-            var result = Category.Reposity.GetPageList(page, pageSize, (o => o.Company == Company));
+            var result = Category.Reposity.GetPageList(page, pageSize, (o => o.Company == BaseComp));
             Category.Dispose();
             return Json(result);
         }
@@ -69,7 +71,7 @@ namespace Ross.OA.Web.Controllers
             if (result != null)
                 entity = result;
             dto.Category = entity;
-            dto.ParentLists = GetCategoryTree(Company);
+            dto.ParentLists = GetCategoryTree(BaseComp);
             return Json(dto);
         }
 
@@ -80,8 +82,8 @@ namespace Ross.OA.Web.Controllers
                 List<Categories> AllCate = new List<Categories>();
                 CategoryService CategoryRead = new CategoryService();
                 CategoryService Category = new CategoryService();
-                AllCate = CategoryRead.Reposity.GetAllList(o => o.Company == Company);
-                input.Company = Company;
+                AllCate = CategoryRead.Reposity.GetAllList(o => o.Company == BaseComp);
+                input.Company = BaseComp;
                 input.Level = CsmLevel(input.ParentId, AllCate);
                 result.datas = Category.Reposity.InsertOrUpdate(input);
                 Category.Dispose();
@@ -111,7 +113,7 @@ namespace Ross.OA.Web.Controllers
         public JsonResult GetTreeList(string layout = "")
         {
             ResultDto<List<CategoryTree>> result = new ResultDto<List<CategoryTree>>();
-            var lists = GetCategoryTree(Company);
+            var lists = GetCategoryTree(BaseComp);
             if (!string.IsNullOrEmpty(layout))
             {
                 lists = lists.Where(o => o.Layout == layout).ToList();

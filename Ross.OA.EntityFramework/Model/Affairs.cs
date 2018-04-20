@@ -15,6 +15,12 @@ namespace Ross.OA.EntityFramework.Model
         public string Title { get; set; }
         [Column(TypeName = "ntext")]
         public string Contents { get; set; }
+        [MaxLength(50)]
+        public string ContractNum { get; set; }
+        [MaxLength(50)]
+        public string PartNum { get; set; }
+        [Column(TypeName = "ntext")]
+        public string Reasons { get; set; }
         [Required]
         public DateTime CreationTime { get; set; }
         /// <summary>
@@ -43,7 +49,7 @@ namespace Ross.OA.EntityFramework.Model
         [ForeignKey("RespEmpId")]
         public Employee RespEmp { get; set; }
         /// <summary>
-        /// 紧急等级，1 -非常紧急，2 -紧急，3 -中等，3 -日常
+        /// 紧急等级，1 -非常紧急，2 -紧急，3 -中等，4 -日常
         /// </summary>
         [DefaultValue(1)]
         public int EmergGrade { get; set; }

@@ -11,7 +11,10 @@ namespace Ross.OA.EntityFramework.Model
     {
         [Required, MaxLength(8)]
         public string Company { get; set; }
-        [Required, MaxLength(20)]
+        [Required, StringLength(50)]
+        public string ProductNum { get; set; }
+        public decimal ProductQty { get; set; }
+        [Required, MaxLength(50)]
         public string ContractNum { get; set; }
         [Required]
         public long OrderNum { get; set; }
@@ -23,6 +26,7 @@ namespace Ross.OA.EntityFramework.Model
         [Required]
         [StringLength(10)]
         public string ShipviaCode { get; set; }
+        [StringLength(20)]
         public string EnterPerson { get; set; }
         public int EmpId { get; set; }
         [ForeignKey("EmpId")]
@@ -41,5 +45,8 @@ namespace Ross.OA.EntityFramework.Model
         public string RevNum { get; set; }
         [Column(TypeName = "text")]
         public string Comment { get; set; }
+        [StringLength(50)]
+        public string ShipSize { get; set; }
+        public decimal ShipWeight { get; set; }
     }
 }
