@@ -12,11 +12,12 @@ namespace Ross.OA.Web.Controllers
         [Filters.FilterCheckLogin]
         public ActionResult Index()
         {
-            ViewBag.AdminName = AppBase.CookieVal("EmpName");            
+            ViewBag.AdminName = AppBase.CookieVal("EmpName");
             using (CompanyService ObjServ = new CompanyService())
             {
-                var CompObj = ObjServ.Reposity.GetAllList(o=>o.CompanyCode==Company).FirstOrDefault();
-                ViewBag.CompanyName = CompObj.CompanyName;
+                var CompObj = ObjServ.Reposity.GetAllList(o => o.CompanyCode == Company).FirstOrDefault();
+                if (CompObj != null)
+                    ViewBag.CompanyName = CompObj.CompanyName;
             }
             return View();
         }

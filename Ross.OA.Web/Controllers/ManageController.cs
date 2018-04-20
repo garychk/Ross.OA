@@ -83,6 +83,16 @@ namespace Ross.OA.Web.Controllers
             EmployeeService EmpServ = new EmployeeService();
             if (EmpServ.ReposityEmp.Count() <= 0)
             {
+                CompanyService CompServ = new CompanyService();
+                CompServ.Reposity.Insert(new Company()
+                {
+                    CompanyCode = "001",
+                    CompanyName = "ABC Company",
+                    Taxrate = 1,
+                    CreationTime = DateTime.Now,
+                    IsActive = true,
+                    IsDeleted = false
+                });
                 var dept = EmpServ.ReposityDept.Insert(new Depart()
                 {
                     DepartCode = "IT",
