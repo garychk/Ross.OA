@@ -16,6 +16,8 @@ namespace Ross.OA.Web.Dto
     {
         public long Id { get; set; }
         public string Company { get; set; }
+        public string ProductNum { get; set; }
+        public decimal ProductQty { get; set; }
         public string OrderNum { get; set; }
         public string OrderDate { get; set; }
         public long CustID { get; set; }
@@ -23,6 +25,8 @@ namespace Ross.OA.Web.Dto
         public string EnterPerson { get; set; }
         public Employee Emp { get; set; }
         public string RevNum { get; set; }
+        public string ContractNum { get; set; }
+        public int affairCount { get; set; }
     }
     public class PartSelect
     {
@@ -30,7 +34,7 @@ namespace Ross.OA.Web.Dto
         public string PartDesc { get; set; }
         public string IUM { get; set; }
     }
-    public class ShipHdInput
+    public class ShipHdOutput
     {
         public long Id { get; set; }
         public string Company { get; set; }
@@ -49,11 +53,36 @@ namespace Ross.OA.Web.Dto
         public string ContractNum { get; set; }
         public string RevNum { get; set; }
         public string Comment { get; set; }
+        public string ShipSize { get; set; }
+        public decimal ShipWeight { get; set; }
+        public string ProductNum { get; set; }
+        public decimal ProductQty { get; set; }
     }
 
     public class ShipInput
     {
-        public ShipHdInput ShipHd { get; set; }
+        public ShipHdOutput ShipHd { get; set; }
         public ShipDetail ShipDt { get; set; }
+    }
+
+    public class ShipDetailOutput
+    {
+        public int RowNum { get; set; }
+        public long Id { get; set; }
+        public string Company { get; set; }
+        public string ProductNum { get; set; }
+        public string PartNum { get; set; }
+        public string PartDesc { get; set; }
+        public string IUM { get; set; }
+        public string PartModel { get; set; }
+        public decimal ShipQty { get; set; }
+        public string SONum { get; set; }
+        public string Reasons { get; set; }
+        public string RespDepartCodes { get; set; }
+        public string RespDepartNames { get; set; }
+        public bool OpenLine { get; set; }
+        public bool IsConfirm { get; set; }
+        public string EnterPerson { get; set; }
+        public int affairCount { get; set; }
     }
 }

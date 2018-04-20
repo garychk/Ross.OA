@@ -101,6 +101,26 @@
     <Compile Include="Migrations\201804131157130_UptShipDetailReasons2.Designer.cs">
       <DependentUpon>201804131157130_UptShipDetailReasons2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201804160255345_UptShipDetail2.cs" />
+    <Compile Include="Migrations\201804160255345_UptShipDetail2.Designer.cs">
+      <DependentUpon>201804160255345_UptShipDetail2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804170016107_UptShipHead.cs" />
+    <Compile Include="Migrations\201804170016107_UptShipHead.Designer.cs">
+      <DependentUpon>201804170016107_UptShipHead.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804170400230_UptShipHead2.cs" />
+    <Compile Include="Migrations\201804170400230_UptShipHead2.Designer.cs">
+      <DependentUpon>201804170400230_UptShipHead2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804180136492_UptAffairModel.cs" />
+    <Compile Include="Migrations\201804180136492_UptAffairModel.Designer.cs">
+      <DependentUpon>201804180136492_UptAffairModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804181033145_UptAffairAndShipModel.cs" />
+    <Compile Include="Migrations\201804181033145_UptAffairAndShipModel.Designer.cs">
+      <DependentUpon>201804181033145_UptAffairAndShipModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Model\Affairs.cs" />
     <Compile Include="Model\Categories.cs" />
     <Compile Include="Model\Company.cs" />
@@ -157,6 +177,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201804131157130_UptShipDetailReasons2.resx">
       <DependentUpon>201804131157130_UptShipDetailReasons2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804160255345_UptShipDetail2.resx">
+      <DependentUpon>201804160255345_UptShipDetail2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804170016107_UptShipHead.resx">
+      <DependentUpon>201804170016107_UptShipHead.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804170400230_UptShipHead2.resx">
+      <DependentUpon>201804170400230_UptShipHead2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804180136492_UptAffairModel.resx">
+      <DependentUpon>201804180136492_UptAffairModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804181033145_UptAffairAndShipModel.resx">
+      <DependentUpon>201804181033145_UptAffairAndShipModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

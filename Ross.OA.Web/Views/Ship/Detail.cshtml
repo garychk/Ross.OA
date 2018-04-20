@@ -22,48 +22,48 @@
     </div>
 </div>
 <!-- Main content -->
-<section class="invoice">
+<section class="invoice" id="formDetail">
     <!-- title row -->
     <div class="row">
         <div class="col-xs-12">
             <h2 class="page-header">
                 <i class="fa fa-globe"></i> 罗斯（无锡）设备有限公司.
-                <small class="pull-right">订单日期： @(DateTime.Now.ToShortDateString())</small>
+                <small class="pull-right">订单号：<label class="label label-default">{{ShipHd.OrderNum}}</label>　　订单日期： <label class="label label-default">{{ShipHd.OrderDate}}</label></small>
             </h2>
             <p>地址: 无锡市锡山经济开发区万全路55号  邮编: 214101<br>Tel: 0510-85080388    Fax: 0510-88263400</p>
         </div>
         <!-- /.col -->
-    </div>    
+    </div>
     <!-- Table row -->
     <div class="row">
         <div class="col-xs-12 table-responsive">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>编号</th>
-                        <th>服务号/合同号</th>
-                        <th>产品号</th>
-                        <th>物料编码</th>
+                        <th style="width:50px">编号</th>
+                        <th>合同号</th>
+                        <th style="width:120px">产品号</th>
+                        <th style="width:120px">物料编码</th>
                         <th>物料名称</th>
                         <th>型号</th>
-                        <th>数量</th>
-                        <th>SO号</th>
+                        <th style="width:60px">数量</th>
+                        <th style="width:60px">SO号</th>
                         <th>原因</th>
-                        <th>责任部门</th>
+                        <th style="width:80px">责任部门</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Call of Duty</td>
-                        <td>455-981-221</td>
-                        <td>El snort testosterone trophy driving gloves handsome</td>
-                        <td>$64.50</td>
-                        <td>1</td>
-                        <td>Call of Duty</td>
-                        <td>455-981-221</td>
-                        <td>El</td>
-                        <td>$64.50</td>
+                    <tr  v-for="item in ShipDetailList">
+                        <td>{{item.RowNum}}</td>
+                        <td>{{ShipHd.ContractNum}}</td>
+                        <td>{{item.ProductNum}}</td>
+                        <td>{{item.PartNum}}</td>
+                        <td>{{item.PartDesc}}</td>
+                        <td>{{item.PartModel}}</td>
+                        <td>{{item.ShipQty}}</td>
+                        <td>{{item.SONum}}</td>
+                        <td>{{item.Reasons}}</td>
+                        <td>{{item.RespDepartNames}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -71,42 +71,7 @@
         <!-- /.col -->
     </div>
     <!-- /.row -->
-    <div class="row">
-        <!-- accepted payments column -->
-        <div class="col-xs-6">
-            <p class="lead">付款方式：</p>
-            <p class="text-muted well well-sm no-shadow">
-                Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem plugg
-                dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
-            </p>
-        </div>
-        <!-- /.col -->
-        <div class="col-xs-6">
-            <p class="lead">金额总计：</p>
-            <div class="table-responsive">
-                <table class="table">
-                    <tr>
-                        <th style="width:50%">数量汇总:</th>
-                        <td>$250.30</td>
-                    </tr>
-                    <tr>
-                        <th>税率 (9.3%)</th>
-                        <td>$10.34</td>
-                    </tr>
-                    <tr>
-                        <th>货品金额:</th>
-                        <td>$5.80</td>
-                    </tr>
-                    <tr>
-                        <th>总金额:</th>
-                        <td>$265.24</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <!-- /.col -->
-    </div>
-    <!-- info row -->
+    
     <div class="row invoice-info">
         <div class="col-sm-6 invoice-col">
             <p class="lead">
@@ -114,10 +79,12 @@
             </p>
             <address>
                 罗斯（无锡）设备有限公司<br>
-                <strong>　发货人：</strong>John Doe<br>
-                <strong>　确认人：</strong>John Doe<br>
-                <strong>发货方式：</strong><input type="checkbox"> 快递 <input type="checkbox"> 物流<br>
-                <strong>　　电话：</strong>Phone: (804) 123-5432
+                <strong>　发货人：</strong> <br>
+                <strong>　确认人：</strong> <br>
+                <strong>发货方式：</strong>
+                <span class="label label-info">{{ShipHd.ShipviaCode}}</span>
+                <br>
+                <strong>　　电话：</strong> 
             </address>
         </div>
         <!-- /.col -->
@@ -126,10 +93,9 @@
                 收货单位
             </p>
             <address>
-                <strong>　收货人：</strong>John Doe<br>
-                <strong>收货地址：</strong>795 Folsom Ave, Suite 600
-                San Francisco, CA 94107<br>
-                <strong>　　电话：</strong>Phone: (555) 539-1037
+                <strong>　收货人：</strong>{{Customer.Contactor}}<br>
+                <strong>收货地址：</strong>{{Customer.Address1}}<br>
+                <strong>　　电话：</strong>{{Customer.Telphone}}
             </address>
         </div>
     </div>
@@ -138,14 +104,39 @@
     <!-- this row will not appear when printing -->
     <div class="row no-print">
         <div class="col-xs-12">
-            <a href="invoice-print.html" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> 打印</a>
-            <a href="/Ship/Edit/0" class="btn btn-success pull-right">
+            @*<a href="#"  class="btn btn-default"><i class="fa fa-print"></i> 打印</a>*@
+            <a href="/Ship/Edit/@(ViewBag.Id)" class="btn btn-success pull-right">
                 <i class="fa fa-credit-card"></i> 修改
             </a>
-            <button type="button" class="btn btn-primary pull-right" style="margin-right: 5px;">
-                <i class="fa fa-download"></i> 下载 PDF
-            </button>
+            <a href="/Ship/ExportExcel?shipid=@(ViewBag.Id)" class="btn btn-primary pull-right" style="margin-right: 5px;">
+                <i class="fa fa-download" ></i> 导出Excel
+            </a>
         </div>
     </div>
 </section>
-
+@section scripts{
+    <script>
+        var datas = {
+            ShipHd: [],
+            ShipDetailList: [],
+            Customer:[],
+            ShipDetailList: []
+        }
+        GetDatas();
+        var vm = new Vue({
+            el: "#formDetail",
+            data: datas
+        })
+        function GetDatas(){
+            $.post('/Ship/GetModel', { id: @(ViewBag.Id) }, function (response) {
+                datas.ShipHd = response;
+                $.post('/Customer/GetModel', { id: response.CustID }, function (response) {
+                    datas.Customer = response;
+                })
+                $.post('/Ship/GetDetailLists', {page:1,pageSize:0, shipid:datas.ShipHd.Id }, function (response) {
+                    datas.ShipDetailList = response.datas;
+                })
+            })
+        }
+    </script>
+}

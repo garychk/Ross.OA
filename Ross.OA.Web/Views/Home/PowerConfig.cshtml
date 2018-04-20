@@ -1,0 +1,115 @@
+﻿
+@{
+    ViewBag.Title = "PowerConfig";
+    Layout = "~/Views/Shared/_LayoutPageInner.cshtml";
+}
+<section class="content-header">
+    <h1>
+        权限设置
+        <small>Power Config</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Dashboard/"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">权限设置</li>
+    </ol>
+</section>
+<section class="content">
+    <div class="box box-primary">
+        <!-- form start -->
+        <form role="form" id="formEdit">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="powers">选择部门</label>
+                        <select class="form-control DeptId">
+                            <option v-for="option in DeptLists" v-bind:value="option.Id">{{option.DepartName}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="powers">选择权限</label>
+                            <select class="form-control Powers" multiple>
+                                <option v-for="option in CategoryLists" v-bind:value="option.CategoryIndex">{{option.CategoryName}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <button type="button" class="btn btn-primary" v-on:click="dosubmit">确定</button>
+                <button type="button" class="btn btn-default">返回</button>
+            </div>
+        </form>
+    </div>
+</section>
+@section css{
+    <link rel="stylesheet" href="/Contents/bower_components/select2/dist/css/select2.min.css">
+}
+@section scripts{
+<script src="/Contents/bower_components/select2/dist/js/select2.full.min.js"></script>
+    <script>
+        
+        var formData = {
+            CategoryLists: [],
+            DeptLists: []
+        }
+        var vm = new Vue({
+            el: "#formEdit",
+            data: formData,
+            methods: {
+                dosubmit: function () {
+                    $.ajax({
+                        url: '/Employee/UpdateDeptPower',
+                        type: "POST",
+                        data: {
+                            DeptId: $('.DeptId').val(),
+                            Powers: $('.Powers').select2("val").join(",")
+                        },
+                        success: function (data) {
+                            toastr.options = {
+                                "positionClass": "toast-top-right",
+                            }
+                            if (data.code == 100) {
+                                toastr.success('保存成功！');
+                            } else {
+                                toastr.error(data.message);
+                            }
+                        }
+                    });
+                    return false;
+                }
+            }
+        })
+        $(function () {
+            $('.DeptId').select2({
+                placeholder: '请选择部门',
+                allowClear: true
+            });
+            $('.Powers').select2({
+                placeholder: '请选择权限，允许多选',
+                allowClear: true
+            });
+
+            $.post('/Category/GetTreeList', { layout: 'Menus' }, function (response) {
+                formData.CategoryLists = response.datas
+            });
+            $.post('/Employee/GetListsDept', { page: 1, pageSize: 0 }, function (response) {
+                formData.DeptLists = response.datas
+            });
+
+            $(".DeptId").on("change", function (e) {
+                $.post('/Employee/GetModelDept', { id: $(this).val() }, function (response) {
+                    if (response.Powers!=null)
+                        $(".Powers").val(response.Powers.split(",")).trigger('change');
+                    else
+                        $(".Powers").val('').trigger('change');
+                });
+            })
+        })
+    </script>
+}
+
+
+
+
