@@ -16,8 +16,8 @@ namespace Ross.OA.Web.Controllers
             ViewBag.Depart = EmpDeptName;
             using (CompanyService ObjServ = new CompanyService())
             {
-                var CompObj = ObjServ.Reposity.GetAllList(o=>o.CompanyCode==BaseComp).FirstOrDefault();
-                ViewBag.CompanyName = CompObj != null ? CompObj.CompanyName : "";
+                var CompObj = ObjServ.Reposity.GetAllList(o => o.CompanyCode == BaseComp).FirstOrDefault();
+                ViewBag.CompanyName = CompObj.CompanyName;
             }
             return View();
         }
@@ -26,6 +26,16 @@ namespace Ross.OA.Web.Controllers
         {
             ViewBag.EmpId = EmpId;
             ViewBag.EmpDeptId = EmpDeptId;
+            ShipService shipServ = new ShipService();
+            CustomerService custServ = new CustomerService();
+            PartService partServ = new PartService();
+            AffairService affairServ = new AffairService();
+            ViewBag.CountShipment = shipServ.ReposityShipH.Count();
+            ViewBag.CountCustomer = custServ.Reposity.Count();
+            ViewBag.CountParts = partServ.Reposity.Count();
+            int num1 = affairServ.Reposity.GetAllList(o => o.ApproveStatus == "A" && o.RespDepartId == EmpDeptId).Count;
+            int num2 = affairServ.Reposity.GetAllList(o => o.RespDepartId == EmpDeptId).Count;
+            ViewBag.AffairRate = Math.Round((num2 != 0 ? (float)num1 / num2 : 0) * 100);
             return View();
         }
         [Filters.FilterCheckLogin]
@@ -48,6 +58,10 @@ namespace Ross.OA.Web.Controllers
         }
 
         public ActionResult PowerOff()
+        {
+            return View();
+        }
+        public ActionResult Error()
         {
             return View();
         }

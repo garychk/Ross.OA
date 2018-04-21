@@ -67,7 +67,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-2 control-label">发货日期</label>
+                                        <label for="" class="col-sm-2 control-label">订单日期</label>
                                         <div class="col-sm-10">
                                             <div class="input-group">
                                                 <div class="input-group-addon">
@@ -137,9 +137,7 @@
                                         <label for="ShipviaCode" class="col-sm-2 control-label">运输方式</label>
                                         <div class="col-sm-10">
                                             <select class="form-control select2 ShipviaCode" v-model="ShipHd.ShipviaCode">
-                                                <option value="快递">快递</option>
-                                                <option value="物流">物流</option>
-                                                <option value="出差附带">出差附带</option>
+                                                <option v-for="option in TransportList" v-bind:value="option.CategoryIndex">{{option.PrevStr}} {{option.CategoryName}}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -354,7 +352,8 @@
             PartItems: [],
             Reasons: [],
             ShipDetailList: [],
-            ShipDetailCount:0
+            ShipDetailCount: 0,
+            TransportList:[]
         }
         localStorage.DetailItem=0;
         $(function () {
@@ -410,18 +409,10 @@
                 GetPart(_keyw);
             })
 
-            $(".CustID").on("change",function(e){
-                datas.ShipHd.CustID = $(this).val();
-            })
-            $(".ShipviaCode").on("change",function(e){
-                datas.ShipHd.ShipviaCode = $(this).val();
-            })
             $(".ShipDTSelect").on("change",function(e){
                 localStorage.DetailItem = $(this).val();
                 GetDatas();
-            })
-
-            GetDatas();
+            })           
 
             var GetPart = function (_keyw) {
                 if (_keyw.length >= 13) {
@@ -441,14 +432,23 @@
             }
         })
 
-        function GetDatas(){
+        function GetDatas() {
+            $.ajaxSettings.async = false;
+            $.post('/Employee/GetListsDept', { page: 1, pageSize: 0 }, function (response) {
+                datas.Departs = response.datas;
+            })
+            
+            $.post('/Customer/GetLists', { page: 1, pageSize: 0 }, function (response) {
+                datas.CustomerItems = response.datas;
+            })
+            $.post('/Category/GetTreeList', { layout: 'Transport' }, function (response) {
+                datas.TransportList = response.datas;
+            })
             $.post('/Ship/GetModel', { id: _id }, function (response) {
                 datas.ShipHd = response;
-                if (datas.ShipHd.RespDepartCodes != null)
+                if (datas.ShipHd.RespDepartCodes != null) {
                     $(".RespDepartCodes").val(datas.ShipHd.RespDepartCodes.split(",")).trigger('change');
-                if (datas.ShipHd.ShipviaCode != null)
-                    $(".ShipviaCode").val(datas.ShipHd.ShipviaCode).trigger('change');
-
+                }
                 $.post('/Customer/GetModel', { id: response.CustID }, function (resp) {
                     datas.Customer = resp;
                 })
@@ -466,29 +466,25 @@
                         if (datas.ShipDetail.RespDepartCodes != null)
                             $(".RespDepartCodesDT").val(datas.ShipDetail.RespDepartCodes.split(",")).trigger('change');
                     }
-                })
+                })                
             })
-
-            $.post('/Employee/GetListsDept', { page:1,pageSize:0 }, function (response) {
-                datas.Departs = response.datas;
-            })
-            $.post('/Customer/GetLists', { page:1, pageSize:0 }, function (response) {
-                datas.CustomerItems = response.datas;
-            })
+            $.ajaxSettings.async = true;
         }
+
+        GetDatas();
+
         var vm = new Vue({
             el: "#formEdit",
             data: datas,
             methods: {
+                InitData: function () {
+                    
+                },
                 dosubmit: function () {
                     datas.ShipHd.CustID = $(".CustID").select2("val");
                     datas.ShipHd.ShipviaCode = $(".ShipviaCode").select2("val");
                     datas.ShipHd.RespDepartCodes = $('.RespDepartCodes').select2("val").join(",");
                     datas.ShipDetail.RespDepartCodes = $('.RespDepartCodesDT').select2("val").join(",");
-
-                    //var dto={}
-                    //dto["ShipHd"] = datas.ShipHd;
-                    //dto["ShipDt"] = datas.ShipDetail;
 
                     $.ajax({
                         url: '/Ship/InsertOrUpdateHD',
@@ -526,7 +522,7 @@
                                         }
                                     })
                                 }
-                                
+
                             }
                             else if(resp.code == 104){
                                 toastr.warning('您无权修改表头！');
@@ -539,7 +535,7 @@
                     return false;
                 }
             }
-        })
+        })        
 
         function GetNewDetail(){
             $.post('/Ship/GetNewDetail', { }, function (response) {
