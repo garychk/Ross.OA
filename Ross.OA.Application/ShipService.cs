@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Ross.OA.Application
 {
-    public class ShipService: RossOAppBase
+    public class ShipService : RossOAppBase
     {
         public readonly IRepository<ShipHead, long> ReposityShipH;
         public readonly IRepository<ShipDetail, long> ReposityShipD;
@@ -17,13 +17,17 @@ namespace Ross.OA.Application
             ReposityShipD = new Repository<ShipDetail, long>(dbContext);
         }
 
-        public ResultDto<List<ShipHead>> GetShipWithEmp(int PageIndex, int PageSize, string Company)
+        public ResultDto<List<ShipHead>> GetShipWithEmp(int PageIndex, int PageSize, string Company, string keywords = "")
         {
             ResultDto<List<ShipHead>> result = new ResultDto<List<ShipHead>>();
-            var query = ReposityShipH.GetPageList(PageIndex, PageSize, (o => o.Company == Company));
-            result.pages = query.pages;
-            result.total = query.total;
-            result.datas = query.datas.AsQueryable()
+            if (!string.IsNullOrEmpty(keywords)) {
+                result = ReposityShipH.GetPageList(PageIndex, PageSize, (o => o.Company == Company && (o.ContractNum.Contains(keywords) || o.ProductNum.Contains(keywords) )));
+            }
+            else
+            {
+                result = ReposityShipH.GetPageList(PageIndex, PageSize, (o => o.Company == Company));
+            }
+            result.datas = result.datas.AsQueryable()
                 .OrderByDescending(entity => entity.OrderDate)
                 .Include(entity => entity.EmpId)
                 .ToList();

@@ -401,6 +401,7 @@
     <Content Include="Views\Home\PowerOff.cshtml" />
     <Content Include="Views\Home\PowerConfig.cshtml" />
     <Content Include="Views\Ship\ImportDT.cshtml" />
+    <Content Include="Views\Home\Error.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

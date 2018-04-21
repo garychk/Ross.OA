@@ -143,7 +143,7 @@ namespace Ross.OA.Web.Controllers
                     prev = "└";
                     for (int i = 0; i < item.Level; i++)
                     {
-                        prev += "┴";
+                        prev += "─";
                     }
                 }
                 item.PrevStr = prev;

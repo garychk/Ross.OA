@@ -17,6 +17,19 @@ namespace Ross.OA.Web.Controllers
         public int EmpId = AppBase.GetEmpId();
         public int EmpDeptId = AppBase.GetEmpDeptId();
         public string EmpName = AppBase.CookieVal("EmpName");
-        public log4net.ILog log = log4net.LogManager.GetLogger("Ross.OA.Web.Controllers"); 
+        public log4net.ILog log = log4net.LogManager.GetLogger("Ross.OA.Web.Controllers");
+
+        protected override void OnException(ExceptionContext filterContext)
+        {
+            // 错误日志编写    
+            string controllerNamer = filterContext.RouteData.Values["controller"].ToString();
+            string actionName = filterContext.RouteData.Values["action"].ToString();
+            string exception = filterContext.Exception.ToString();
+            log.Error(controllerNamer + "" + actionName + " error:" + exception);
+            // 执行基类中的OnException    
+            base.OnException(filterContext);
+            string loginUrl = "/Home/Error";
+            filterContext.HttpContext.Response.Redirect(loginUrl, true);
+        }
     }
 }

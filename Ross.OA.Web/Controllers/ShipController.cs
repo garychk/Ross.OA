@@ -105,7 +105,7 @@ namespace Ross.OA.Web.Controllers
         {
             ResultDto<List<Dto.ShipHdDto>> result = new ResultDto<List<Dto.ShipHdDto>>();
             ShipService ShipServ = new ShipService();
-            var lists = ShipServ.GetShipWithEmp(page, pageSize, BaseComp);
+            var lists = ShipServ.GetShipWithEmp(page, pageSize, BaseComp, keywords);
             result = Mapper.Map<ResultDto<List<Dto.ShipHdDto>>>(lists);
             ShipServ.Dispose();
 
@@ -476,7 +476,7 @@ namespace Ross.OA.Web.Controllers
                             entity.PartModel = GetCellValue(row.Cells[5]);
                             entity.ShipQty = AppBase.ToDecimal(GetCellValue(row.Cells[6]));
                             entity.IUM = GetCellValue(row.Cells[7]);
-                            entity.SONum = GetCellValue(row.Cells[8]);                            
+                            entity.SONum = GetCellValue(row.Cells[8]);
                             entity.Reasons = GetCellValue(row.Cells[9]);
                             entity.RespDepartCodes = GetCellValue(row.Cells[10]);
                             entity.ShipID = shipid;
@@ -498,10 +498,6 @@ namespace Ross.OA.Web.Controllers
             }
             return Json(result);
         }
-        /// <summary>
-        /// 批量导出本校第一批派位学生
-        /// </summary>
-        /// <returns></returns>
         public FileResult ExportExcel(long shipid)
         {
             HSSFWorkbook book = new HSSFWorkbook();
@@ -511,6 +507,7 @@ namespace Ross.OA.Web.Controllers
 
             var DataLists = ShipServ.ReposityShipD.GetAllList(o => o.ShipID == shipid);
             var ShipHD = ShipServ.ReposityShipH.Get(shipid);
+
             string ContractNum = ShipHD.ContractNum;
             string ProdNum = ShipHD.ProductNum;
 
@@ -550,7 +547,7 @@ namespace Ross.OA.Web.Controllers
             ms.Seek(0, SeekOrigin.Begin);
             ShipServ.Dispose();
             EmpSev.Dispose();
-            return File(ms, "application/vnd.ms-excel", "SHIP" + ContractNum + "-"+ ProdNum + ".xls");
+            return File(ms, "application/vnd.ms-excel", "SHIP" + ContractNum + "-" + ProdNum + ".xls");
         }
         private string GetCellValue(ICell cell)
         {

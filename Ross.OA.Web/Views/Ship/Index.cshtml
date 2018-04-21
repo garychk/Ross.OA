@@ -39,9 +39,9 @@
         <div class="box-body">
             <table class="table table-bordered table-hover">
                 <thead>
-                    <tr>
-                        <th>公司</th>
+                    <tr>                        
                         <th>合同号</th>
+                        <th>产品号</th>
                         <th>变更</th>
                         <th>订单时间</th>
                         <th>运输方式</th>
@@ -51,9 +51,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in mydata">
-                        <td>{{item.Company}}</td>
+                    <tr v-for="item in mydata">                        
                         <td>{{item.ContractNum}}</td>
+                        <td>{{item.ProductNum}}</td>
                         <td><a v-bind:href="'/Affair/Lists/?cntnum='+item.ContractNum" v-bind:class="item.affairCount<=0?'hidden':''" v-bind:title="item.affairCount+'条变更记录'"><i class="badge bg-red">{{item.affairCount}}</i></a></td>
                         <td>{{item.OrderDate}}</td>                        
                         <td>{{item.ShipviaCode}}</td>
