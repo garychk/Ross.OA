@@ -91,5 +91,22 @@ namespace Ross.OA.Web.Controllers
             }
             return Json(result);
         }
+        public JsonResult SyncCustomer()
+        {
+            ResultDto<int> result = new ResultDto<int>();
+            try
+            {
+                CustomerService ObjServ = new CustomerService();
+                result.code = 100;
+                result.datas = ObjServ.RunProcSyncCustomer(BaseComp);
+                ObjServ.Dispose();
+            }
+            catch (Exception ex)
+            {
+                result.code = 500;
+                result.message = ex.Message;
+            }
+            return Json(result);
+        }
     }
 }

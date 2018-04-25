@@ -17,7 +17,7 @@ namespace Ross.OA.Web.Controllers
             using (CompanyService ObjServ = new CompanyService())
             {
                 var CompObj = ObjServ.Reposity.GetAllList(o => o.CompanyCode == BaseComp).FirstOrDefault();
-                ViewBag.CompanyName = CompObj.CompanyName;
+                ViewBag.CompanyName = CompObj != null ? CompObj.CompanyName : "";
             }
             return View();
         }

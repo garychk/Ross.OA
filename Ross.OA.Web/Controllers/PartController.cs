@@ -44,6 +44,24 @@ namespace Ross.OA.Web.Controllers
             return View();
         }
 
+        public JsonResult SyncPart(bool IsDel)
+        {
+            ResultDto<int> result = new ResultDto<int>();
+            try
+            {
+                PartService ObjServ = new PartService();
+                result.code = 100;
+                result.datas = ObjServ.RunProcSyncPart(BaseComp, IsDel);
+                ObjServ.Dispose();
+            }
+            catch (Exception ex)
+            {
+                result.code = 500;
+                result.message = ex.Message;
+            }
+            return Json(result);
+        }        
+
         public JsonResult InsertOrUpdate(Part input)
         {
             throw new NotImplementedException();

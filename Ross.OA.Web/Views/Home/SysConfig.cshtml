@@ -20,6 +20,7 @@
         <ul class="nav nav-tabs">
             <li class="active"><a href="#tab1" data-toggle="tab">公司设置</a></li>
             <li><a href="#tab2" data-toggle="tab">部门设置</a></li>
+            <li><a href="#tab3" data-toggle="tab">ERP同步</a></li>
         </ul>
         <div class="tab-content no-padding">
             <div class="tab-pane active" id="tab1" style="position: relative;">
@@ -101,6 +102,13 @@
                                 <li><a href="#">&raquo;</a></li>
                             </ul>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="tab3" style="position: relative;">
+                <div class="box no-border">
+                    <div class="box-header">
+                        <button type="button" class="btn btn-success" onclick="SyncERP()"><i class="fa fa-exchange"></i> 同步ERP物料编码</button>
                     </div>
                 </div>
             </div>
@@ -217,6 +225,16 @@
                     Vue.set(vm, 'mydata', response.datas)
                     Vue.set(vm, 'pages', response.pages)
                 });
+        }
+        function SyncERP() {
+            $.post('/Part/SyncPart', { IsDel: true}, function (response) {
+                if (response.code == 100) {
+                    toastr.success('同步成功！');
+                }
+                else {
+                    toastr.error(response.message);
+                }
+            });
         }
     </script>
 }

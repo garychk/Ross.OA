@@ -20,7 +20,7 @@
                 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default" id="BtnEdit" onclick="OpenPage('/Customer/Edit/0')"><i class="fa fa-file"></i></button>
                 <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="保存"><i class="fa fa-save"></i></button>
                 <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="刷新" onclick="RefreshVueData()"><i class="fa fa-refresh"></i></button>
-                <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-remove"></i></button>
+                <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="同步ERP"><i class="fa fa-exchange" onclick="SyncERP()"></i></button>
             </div>
             <div class="box-tools">
                 <div class="input-group input-group-sm" style="width: 150px;">
@@ -77,7 +77,7 @@
                 mydata: [],
                 pages: 0,
                 totalpages: 0,
-                pageindex:1
+                pageindex: 1
             },
             methods: {
                 chgpage: function (p) {
@@ -124,12 +124,22 @@
                     Vue.set(vm, 'pageindex', _page)
                 });
         }
-        function turnpage(val)
-        {
+        function turnpage(val) {
             var _page = parseInt($('#pageindex').val());
             _page = _page + val;
             $('#pageindex').val(_page);
             GetDataList(vm);
+        }
+        function SyncERP() {
+            $.post('/Customer/SyncCustomer', {}, function (response) {
+                if (response.code == 100) {
+                    toastr.success('同步成功！');
+                    GetDataList(vm);
+                }
+                else {
+                    toastr.error(response.message);
+                }
+            });
         }
     </script>
 }
