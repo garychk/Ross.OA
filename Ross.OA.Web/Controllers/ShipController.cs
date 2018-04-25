@@ -325,6 +325,7 @@ namespace Ross.OA.Web.Controllers
                         RespDepartId = deptID,
                         ContractNum = entity.ContractNum,
                         PartNum = entity.ProductNum,
+                        Objects = "ShipHead"
                     });
                     affairServ.Dispose();
                 }
@@ -365,7 +366,8 @@ namespace Ross.OA.Web.Controllers
                         RespDepartId = deptID,
                         ContractNum = entity.ShipHd.ContractNum,
                         PartNum = entity.PartNum,
-                        Reasons = entity.Reasons
+                        Reasons = entity.Reasons,
+                        Objects = "ShipDetail"
                     });
                     affairServ.Dispose();
                 }
@@ -406,7 +408,8 @@ namespace Ross.OA.Web.Controllers
                         RespDepartId = deptID,
                         ContractNum = entity.ShipHd.ContractNum,
                         PartNum = entity.PartNum,
-                        Reasons = entity.Reasons
+                        Reasons = entity.Reasons,
+                        Objects = "ShipDetail"
                     });
                     affairServ.Dispose();
                 }

@@ -99,13 +99,19 @@
                                     <div class="form-group">
                                         <label for="Contactor" class="col-sm-2 control-label">收货人</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" readonly="readonly" v-model="Customer.Contactor">
+                                            <input type="text" class="form-control" v-model="ShipHd.OTSContact">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="Address1" class="col-sm-2 control-label">收货地址</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" v-model="Customer.Address1">
+                                        <label for="Address1" class="col-sm-3 control-label">收货人地址</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" v-model="ShipHd.OTSAddress">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Contactor" class="col-sm-3 control-label">收货人联系电话</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" v-model="ShipHd.OTSPhone">
                                         </div>
                                     </div>
                                 </div>
@@ -114,6 +120,12 @@
                                         <label for="ContractNum" class="col-sm-2 control-label">合同号</label>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" v-model="ShipHd.ContractNum">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="PONum" class="col-sm-2 control-label">PO号</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" v-model="ShipHd.PONum">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -135,10 +147,26 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="ShipviaCode" class="col-sm-2 control-label">运输方式</label>
-                                        <div class="col-sm-10">
+                                        <div class="col-sm-4">
                                             <select class="form-control select2 ShipviaCode" v-model="ShipHd.ShipviaCode">
                                                 <option v-for="option in TransportList" v-bind:value="option.CategoryIndex">{{option.PrevStr}} {{option.CategoryName}}</option>
                                             </select>
+                                        </div>
+                                        <label for="PackageType" class="col-sm-2 control-label">包装形式</label>
+                                        <div class="col-sm-4">
+                                            <select class="form-control select2 PackageType" v-model="ShipHd.PackageType">
+                                                <option v-for="option in PackageList" v-bind:value="option.CategoryIndex">{{option.PrevStr}} {{option.CategoryName}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ShipSize" class="col-sm-2 control-label">尺寸</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" v-model="ShipHd.ShipSize">
+                                        </div>
+                                        <label for="ShipWeight" class="col-sm-2 control-label">重量</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" v-model="ShipHd.ShipWeight">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -151,20 +179,14 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="EnterPerson" class="col-sm-2 control-label">录入员</label>
-                                        <div class="col-sm-10">
+                                        <div class="col-sm-4">
                                             <input type="text" class="form-control" v-model="ShipHd.EnterPerson" readonly="readonly">
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="ShipSize" class="col-sm-2 control-label">尺寸</label>
+                                        <label for="FollowUpUser" class="col-sm-2 control-label">跟进人</label>
                                         <div class="col-sm-4">
-                                            <input type="text" class="form-control" v-model="ShipHd.ShipSize">
+                                            <input type="text" class="form-control" v-model="ShipHd.FollowUpUser">
                                         </div>
-                                        <label for="ShipWeight" class="col-sm-2 control-label">重量</label>
-                                        <div class="col-sm-4">
-                                            <input type="text" class="form-control" v-model="ShipHd.ShipWeight">
-                                        </div>                                        
-                                    </div>
+                                    </div>                                    
                                 </div>
                             </div>
                         </div>
@@ -220,30 +242,39 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">                                    
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="Reasons" class="col-sm-2 control-label">原因</label>
-                                        <div class="col-sm-10">
+                                        <label for="FollowUpUser" class="col-sm-3 control-label">自制/外购</label>
+                                        <div class="col-sm-5">                                            
+                                            <select class="form-control"  v-model="ShipDetail.TypeCode">
+                                                <option value="自制">自制</option>
+                                                <option value="外购">外购</option>
+                                            </select>
+                                        </div>
+                                    </div>                             
+                                    <div class="form-group">
+                                        <label for="Reasons" class="col-sm-3 control-label">原因</label>
+                                        <div class="col-sm-9">
                                             <textarea class="form-control" v-model="ShipDetail.Reasons"></textarea>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="RespDepartCodesDT" class="col-sm-2 control-label">责任方</label>
-                                        <div class="col-sm-10">
+                                        <label for="RespDepartCodesDT" class="col-sm-3 control-label">责任方</label>
+                                        <div class="col-sm-9">
                                             <select class="form-control select2 RespDepartCodesDT" style="width:100%" multiple>
                                                 <option v-for="option in Departs" v-bind:value="option.Id">{{option.DepartName}}</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="EnterPerson" class="col-sm-2 control-label">录入员</label>
-                                        <div class="col-sm-10">
+                                        <label for="EnterPerson" class="col-sm-3 control-label">录入员</label>
+                                        <div class="col-sm-9">
                                             <input type="text" class="form-control" v-model="ShipDetail.EnterPerson" readonly="readonly">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="OpenLine" class="col-sm-2 control-label">未结</label>
-                                        <div class="col-sm-3">
+                                        <label for="OpenLine" class="col-sm-3 control-label">未结</label>
+                                        <div class="col-sm-2">
                                             <div class="checkbox">
                                                 <label>
                                                     <input type="checkbox" v-model="ShipDetail.OpenLine">
@@ -274,8 +305,6 @@
                                         <th>型号</th>
                                         <th>数量</th>
                                         <th>SO号</th>
-                                        <th style="width:220px">原因</th>
-                                        <th>责任部门</th>
                                         <th>确认</th>
                                     </tr>
                                     <tr v-for="item in ShipDetailList">
@@ -287,8 +316,6 @@
                                         <td>{{item.PartModel}}</td>
                                         <td><span class="label label-success">{{item.ShipQty}}</span></td>
                                         <td>{{item.SONum}}</td>
-                                        <td>{{item.Reasons}}</td>
-                                        <td>{{item.RespDepartNames}}</td>
                                         <td><label v-if="item.IsConfirm === true"><input type="checkbox" checked="checked" /></label>
                                             <label v-else ><input type="checkbox" /></label>
                                         </td>
@@ -352,6 +379,7 @@
             PartItems: [],
             Reasons: [],
             ShipDetailList: [],
+            PackageList: [],
             ShipDetailCount: 0,
             TransportList:[]
         }
@@ -433,7 +461,6 @@
         })
 
         function GetDatas() {
-            $.ajaxSettings.async = false;
             $.post('/Employee/GetListsDept', { page: 1, pageSize: 0 }, function (response) {
                 datas.Departs = response.datas;
             })
@@ -443,6 +470,9 @@
             })
             $.post('/Category/GetTreeList', { layout: 'Transport' }, function (response) {
                 datas.TransportList = response.datas;
+            })
+            $.post('/Category/GetTreeList', { layout: 'Package' }, function (response) {
+                datas.PackageList = response.datas;
             })
             $.post('/Ship/GetModel', { id: _id }, function (response) {
                 datas.ShipHd = response;
@@ -468,7 +498,6 @@
                     }
                 })                
             })
-            $.ajaxSettings.async = true;
         }
 
         GetDatas();
@@ -483,6 +512,7 @@
                 dosubmit: function () {
                     datas.ShipHd.CustID = $(".CustID").select2("val");
                     datas.ShipHd.ShipviaCode = $(".ShipviaCode").select2("val");
+                    datas.ShipHd.PackageType = $(".PackageType").select2("val");
                     datas.ShipHd.RespDepartCodes = $('.RespDepartCodes').select2("val").join(",");
                     datas.ShipDetail.RespDepartCodes = $('.RespDepartCodesDT').select2("val").join(",");
 

@@ -14,6 +14,9 @@ namespace Ross.OA.EntityFramework.Model
         [Required, StringLength(50)]
         public string ProductNum { get; set; }
         public decimal ProductQty { get; set; }
+        /// <summary>
+        /// 合同号
+        /// </summary>
         [Required, MaxLength(50)]
         public string ContractNum { get; set; }
         [Required]
@@ -48,5 +51,49 @@ namespace Ross.OA.EntityFramework.Model
         [StringLength(50)]
         public string ShipSize { get; set; }
         public decimal ShipWeight { get; set; }
+        public int PONum { get; set; }
+        /// <summary>
+        /// 运输单号
+        /// </summary>
+        [StringLength(50)]
+        public string TransportSN { get; set; }
+        /// <summary>
+        /// 跟进人
+        /// </summary>
+        [StringLength(50)]
+        public string FollowUpUser { get; set; }
+        /// <summary>
+        /// 包装形式
+        /// </summary>
+        [StringLength(10)]
+        public string PackageType { get; set; }
+        /// <summary>
+        /// 收货联系人
+        /// </summary>
+        [StringLength(50)]
+        public string OTSContact { get; set; }
+        /// <summary>
+        /// 收货人名称
+        /// </summary>
+        [StringLength(50)]
+        public string OTSName { get; set; }
+        /// <summary>
+        /// 收货地址
+        /// </summary>
+        [StringLength(50)]
+        public string OTSAddress { get; set; }
+        /// <summary>
+        /// 收货联系方式
+        /// </summary>
+        [StringLength(50)]
+        public string OTSPhone { get; set; }
+        [StringLength(50)]
+        public string OTSFax { get; set; }
+        [StringLength(50)]
+        public string OTSZip { get; set; }
+        /// <summary>
+        /// 会签形式
+        /// </summary>
+        public string JoinSign { get; set; }
     }
 }

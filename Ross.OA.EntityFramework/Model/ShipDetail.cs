@@ -40,6 +40,7 @@ namespace Ross.OA.EntityFramework.Model
         public bool IsConfirm { get; set; }
         [StringLength(20)]
         public string EnterPerson { get; set; }
-
+        [StringLength(2)]
+        public string TypeCode { get; set; }
     }
 }

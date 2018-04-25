@@ -65,6 +65,8 @@ namespace Ross.OA.EntityFramework.Model
         public string ApproveStatus { get; set; }
         [DefaultValue(0)]
         public long ParentId { get; set; }
-        public int Depth { get; set; }        
+        public int Depth { get; set; }
+        [MaxLength(50)]
+        public string Objects { get; set; }
     }
 }

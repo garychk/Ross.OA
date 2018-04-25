@@ -57,6 +57,17 @@ namespace Ross.OA.Web.Dto
         public decimal ShipWeight { get; set; }
         public string ProductNum { get; set; }
         public decimal ProductQty { get; set; }
+        public int PONum { get; set; }
+        public string TransportSN { get; set; }
+        public string FollowUpUser { get; set; }
+        public string PackageType { get; set; }
+        public string OTSContact { get; set; }
+        public string OTSName { get; set; }
+        public string OTSAddress { get; set; }
+        public string OTSPhone { get; set; }
+        public string OTSFax { get; set; }
+        public string OTSZip { get; set; }
+        public string JoinSign { get; set; }
     }
 
     public class ShipInput
@@ -83,6 +94,7 @@ namespace Ross.OA.Web.Dto
         public bool OpenLine { get; set; }
         public bool IsConfirm { get; set; }
         public string EnterPerson { get; set; }
+        public string TypeCode { get; set; }
         public int affairCount { get; set; }
     }
 }

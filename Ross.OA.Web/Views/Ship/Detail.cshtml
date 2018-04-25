@@ -48,8 +48,6 @@
                         <th>型号</th>
                         <th style="width:60px">数量</th>
                         <th style="width:60px">SO号</th>
-                        <th>原因</th>
-                        <th style="width:80px">责任部门</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,8 +60,6 @@
                         <td>{{item.PartModel}}</td>
                         <td>{{item.ShipQty}}</td>
                         <td>{{item.SONum}}</td>
-                        <td>{{item.Reasons}}</td>
-                        <td>{{item.RespDepartNames}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -94,9 +90,9 @@
             </p>
             <address>
                 {{Customer.CustName}}<br>
-                <strong>　收货人：</strong>{{Customer.Contactor}}<br>
-                <strong>收货地址：</strong>{{Customer.Address1}}<br>
-                <strong>　　电话：</strong>{{Customer.Telphone}}
+                <strong>　收货人：</strong>{{ShipHd.OTSContact}}<br>
+                <strong>收货地址：</strong>{{ShipHd.OTSAddress}}<br>
+                <strong>　　电话：</strong>{{ShipHd.OTSPhone}}
             </address>
         </div>
     </div>
