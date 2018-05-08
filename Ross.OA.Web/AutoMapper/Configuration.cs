@@ -14,7 +14,7 @@ namespace Ross.OA.Web.AutoMapper
             {
                 cfg.AddProfile<Profiles.CategoryProfile>();
                 cfg.AddProfile<Profiles.ShipProfile>();
-                cfg.AddProfile<Profiles.CompanyProfile>();
+                cfg.AddProfile<Profiles.EntityProfile>();
             });
         }
     }

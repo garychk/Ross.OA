@@ -33,7 +33,7 @@ namespace Ross.OA.EntityFramework.Model
         public string Sex { get; set; }
         public int DepartId { get; set; }
         [ForeignKey("DepartId")]
-        public Depart Depart { get; set; }
+        public virtual Depart Depart { get; set; }
         public DateTime CreationTime { get; set; }
         public bool IsDeleted { get; set; }
         public Employee()

@@ -90,16 +90,16 @@
     </div>
 </section>
 @section scripts{
-    <script>       
-        
+    <script>
+        var _id='@(ViewBag.Id)';
         $(function () {
             var datas = {
                 Employee:[],
                 Depart:[]
             }
 
-            $.post('/Employee/GetModel', { id: @(ViewBag.Id) }, function (response) {
-                datas.Employee=response;
+            $.post('/Employee/GetModel', { id: _id }, function (response) {
+                datas.Employee=response.datas;
             });
             $.post('/Employee/GetListsDept', { page:1,pageSize:0 }, function (response) {
                 datas.Depart=response.datas;
@@ -111,7 +111,7 @@
                 methods: {
                     dosubmit: function () {
                         $.ajax({
-                            url: '/Employee/InsertOrUpdate',
+                            url: '/Employee/DoEdit',
                             type: "POST",
                             data: datas.Employee,
                             success: function (data) {

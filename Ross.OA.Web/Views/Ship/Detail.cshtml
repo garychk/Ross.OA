@@ -127,9 +127,11 @@
         function GetDatas(){
             $.post('/Ship/GetModel', { id: @(ViewBag.Id) }, function (response) {
                 datas.ShipHd = response;
-                $.post('/Customer/GetModel', { id: response.CustID }, function (response) {
-                    datas.Customer = response;
-                })
+                $.post('/Customer/GetLists', { page: 1, pageSize: 1, keywords: response.CustID }, function (resp) {
+                    if (resp.datas != null) {
+                        datas.Customer = resp.datas[0];
+                    }
+                })   
                 $.post('/Ship/GetDetailLists', {page:1,pageSize:0, shipid:datas.ShipHd.Id }, function (response) {
                     datas.ShipDetailList = response.datas;
                 })

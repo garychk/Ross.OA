@@ -24,8 +24,8 @@ namespace Ross.OA.EntityFramework.Model
         [Required]
         public DateTime OrderDate { get; set; }
         public DateTime PromiseDate { get; set; }
-        [Required]
-        public long CustID { get; set; }
+        [MaxLength(20)]
+        public string CustID { get; set; }
         [Required]
         [StringLength(10)]
         public string ShipviaCode { get; set; }

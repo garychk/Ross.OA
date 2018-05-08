@@ -7,11 +7,14 @@ using System.Web;
 
 namespace Ross.OA.Web.AutoMapper.Profiles
 {
-    public class CompanyProfile: Profile
+    public class EntityProfile: Profile
     {
-        public CompanyProfile()
+        public EntityProfile()
         {
             CreateMap<Company, Dto.CompanyDto>();
+            CreateMap<Employee, Dto.EmployeeDto>();
+            CreateMap<Dto.EmployeeInput, Employee>();
+            CreateMap<ProjectDetail, Dto.ProjectDetailDto>();
         }
     }
 }

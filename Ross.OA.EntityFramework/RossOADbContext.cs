@@ -23,6 +23,7 @@ namespace Ross.OA.EntityFramework
         public virtual IDbSet<Categories> Categories { get; set; }
         public virtual IDbSet<Company> Company { get; set; }
         public virtual IDbSet<Customer> Customer { get; set; }
+        public virtual IDbSet<ProjectDetail> ProjectDetail { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
         }

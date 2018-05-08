@@ -125,6 +125,26 @@
     <Compile Include="Migrations\201804240132340_UptShipHDShipDTAffair.Designer.cs">
       <DependentUpon>201804240132340_UptShipHDShipDTAffair.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201804250753518_UptShipHDCustIDType.cs" />
+    <Compile Include="Migrations\201804250753518_UptShipHDCustIDType.Designer.cs">
+      <DependentUpon>201804250753518_UptShipHDCustIDType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201804250755019_UptShipHDCustIDType2.cs" />
+    <Compile Include="Migrations\201804250755019_UptShipHDCustIDType2.Designer.cs">
+      <DependentUpon>201804250755019_UptShipHDCustIDType2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805070631052_AddEntityProject.cs" />
+    <Compile Include="Migrations\201805070631052_AddEntityProject.Designer.cs">
+      <DependentUpon>201805070631052_AddEntityProject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805070636294_UptEntityProject.cs" />
+    <Compile Include="Migrations\201805070636294_UptEntityProject.Designer.cs">
+      <DependentUpon>201805070636294_UptEntityProject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805070720074_UptEntityProject2.cs" />
+    <Compile Include="Migrations\201805070720074_UptEntityProject2.Designer.cs">
+      <DependentUpon>201805070720074_UptEntityProject2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Model\Affairs.cs" />
     <Compile Include="Model\Categories.cs" />
     <Compile Include="Model\Company.cs" />
@@ -133,6 +153,7 @@
     <Compile Include="Model\Employee.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Part.cs" />
+    <Compile Include="Model\ProjectDetail.cs" />
     <Compile Include="Model\ShipDetail.cs" />
     <Compile Include="Model\ShipHead.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -199,6 +220,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201804240132340_UptShipHDShipDTAffair.resx">
       <DependentUpon>201804240132340_UptShipHDShipDTAffair.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804250753518_UptShipHDCustIDType.resx">
+      <DependentUpon>201804250753518_UptShipHDCustIDType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804250755019_UptShipHDCustIDType2.resx">
+      <DependentUpon>201804250755019_UptShipHDCustIDType2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805070631052_AddEntityProject.resx">
+      <DependentUpon>201805070631052_AddEntityProject.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805070636294_UptEntityProject.resx">
+      <DependentUpon>201805070636294_UptEntityProject.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805070720074_UptEntityProject2.resx">
+      <DependentUpon>201805070720074_UptEntityProject2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

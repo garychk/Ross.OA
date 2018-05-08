@@ -343,10 +343,13 @@
     <Compile Include="Controllers\IControllerBase.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PartController.cs" />
+    <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\ShipController.cs" />
     <Compile Include="Dto\AffairDto.cs" />
     <Compile Include="Dto\CategoryDto.cs" />
     <Compile Include="Dto\EmpLogDto.cs" />
+    <Compile Include="Dto\EmployeeDto.cs" />
+    <Compile Include="Dto\ProjectDto.cs" />
     <Compile Include="Dto\ShipDto.cs" />
     <Compile Include="Filters\FilterCheckLogin.cs" />
     <Compile Include="Filters\FilterCheckPower.cs" />
@@ -404,6 +407,8 @@
     <Content Include="Views\Home\PowerConfig.cshtml" />
     <Content Include="Views\Ship\ImportDT.cshtml" />
     <Content Include="Views\Home\Error.cshtml" />
+    <Content Include="Views\Project\Index.cshtml" />
+    <Content Include="Views\Project\ImportFile.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

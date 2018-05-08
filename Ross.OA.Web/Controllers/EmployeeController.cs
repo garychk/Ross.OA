@@ -76,8 +76,9 @@ namespace Ross.OA.Web.Controllers
                 result = EmpServ.ReposityEmp.GetPageList(page, pageSize, (o => o.Company == BaseComp));
             else
                 result = EmpServ.ReposityEmp.GetPageList(page, pageSize, (o => o.Company == BaseComp && (o.UserName.Contains(keywords))));
+            var datas = Mapper.Map<ResultDto<List<EmployeeDto>>>(result);
             EmpServ.Dispose();
-            return Json(result);
+            return Json(datas);
         }
         public JsonResult GetListsDept(int page, int pageSize, string keywords = "")
         {
@@ -92,14 +93,24 @@ namespace Ross.OA.Web.Controllers
         }
         public JsonResult GetModel(int id)
         {
-            Employee model = new Employee();
-            using (EmployeeService EmpServ = new EmployeeService())
+            ResultDto<EmployeeDto> result = new ResultDto<EmployeeDto>();
+            try {
+                using (EmployeeService EmpServ = new EmployeeService())
+                {
+                    Employee model = new Employee();
+                    var entity = EmpServ.ReposityEmp.FirstOrDefault(id);
+                    if (entity != null)
+                        model = entity;
+                    result.code = 100;
+                    result.datas = Mapper.Map<EmployeeDto>(model);
+                }
+            }catch(Exception ex)
             {
-                var result = EmpServ.ReposityEmp.FirstOrDefault(id);
-                if (result != null)
-                    model = result;
+                result.code = 500;
+                result.message = ex.Message;
+                log.Error(ex.Message);
             }
-            return Json(model);
+            return Json(result);
         }
         public JsonResult GetModelDept(int id = 0)
         {
@@ -112,7 +123,7 @@ namespace Ross.OA.Web.Controllers
             }
             return Json(model);
         }
-        public JsonResult InsertOrUpdate(Employee input)
+        public JsonResult DoEdit(EmployeeInput input)
         {
             ResultDto<int> result = new ResultDto<int>();
             using (EmployeeService EmpServ = new EmployeeService())
@@ -120,7 +131,8 @@ namespace Ross.OA.Web.Controllers
                 try
                 {
                     input.Company = BaseComp;
-                    EmpServ.ReposityEmp.InsertOrUpdate(input);
+                    var entity = Mapper.Map<Employee>(input);
+                    EmpServ.ReposityEmp.InsertOrUpdate(entity);
                     result.code = 100;
                     result.message = "ok";
                 }
@@ -173,6 +185,11 @@ namespace Ross.OA.Web.Controllers
                 }
             }
             return Json(result);
+        }
+
+        public JsonResult InsertOrUpdate(Employee input)
+        {
+            throw new NotImplementedException();
         }
     }
 }

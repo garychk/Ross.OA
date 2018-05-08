@@ -36,22 +36,22 @@
             <div class="box-body table-responsive no-padding">
                 <table class="table table-hover EmployeeDt">
                     <tr>
-                        <th>公司</th>
                         <th>工号</th>
                         <th>用户名</th>
+                        <th>部门</th>
                         <th>电话</th>
                         <th>有效</th>
                         <th>操作</th>
                     </tr>
                     <tr v-for="item in mydata">
-                        <td>{{item.Company}}</td>
                         <td>{{item.UserId}}</td>
                         <td>{{item.UserName}}</td>
+                        <td>{{item.Depart.DepartName}}</td>
                         <td>{{item.Phone}}</td>
                         <td>{{item.IsDeleted}}</td>
                         <td>
                             <a class="btn btn-danger btn-xs" href="#" v-on:click="udelete(item.Id)">删除</a>
-                            <a class="btn btn-success btn-xs" href="#" v-on:click="uedit(item.Id)">编辑</a>
+                            <a class="btn btn-success btn-xs" v-bind:href="'/Employee/Edit/'+item.Id">编辑</a>
                         </td>
                     </tr>
                 </table>
@@ -79,9 +79,6 @@
                     $('#pageindex').val(p);
                     GetCustData(vm);
                     return false;
-                },
-                uedit: function (_id) {
-                    OpenPage('/Employee/Edit/' + _id);
                 },
                 udelete: function (_id) {
                     confirmE('确定删除？', function () {

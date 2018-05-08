@@ -20,13 +20,14 @@ namespace Ross.OA.Web.Dto
         public decimal ProductQty { get; set; }
         public string OrderNum { get; set; }
         public string OrderDate { get; set; }
-        public long CustID { get; set; }
+        public string CustID { get; set; }
         public string ShipviaCode { get; set; }
         public string EnterPerson { get; set; }
         public Employee Emp { get; set; }
         public string RevNum { get; set; }
         public string ContractNum { get; set; }
         public int affairCount { get; set; }
+        public string ApproveStatus { get; set; }
     }
     public class PartSelect
     {
@@ -41,7 +42,7 @@ namespace Ross.OA.Web.Dto
         public long OrderNum { get; set; }
         public string OrderDate { get; set; }
         public string PromiseDate { get; set; }
-        public long CustID { get; set; }
+        public string CustID { get; set; }
         public string ShipviaCode { get; set; }
         public string EnterPerson { get; set; }
         public int EmpId { get; set; }

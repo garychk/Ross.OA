@@ -143,6 +143,34 @@ namespace Ross.OA.Web.Controllers
             affServ.Dispose();
             return Json(result);
         }
+
+        public JsonResult UpdateApprove(long id, string status)
+        {
+            ResultDto<string> result = new ResultDto<string>();
+            try
+            {
+                ShipService ObjServ = new ShipService();
+                var entity = ObjServ.ReposityShipH.Get(id);
+                if (entity.EnterPerson.ToLower() != AppBase.CookieVal("EmpName").ToLower())
+                {
+                    result.code = 104;
+                }
+                else
+                {
+                    entity.ApproveStatus = status;
+                    ObjServ.ReposityShipH.Update(entity);
+                    result.code = 100;
+                    result.message = "success";
+                }
+                ObjServ.Dispose();
+            }
+            catch (Exception ex)
+            {
+                result.code = 500;
+                result.message = ex.Message;
+            }
+            return Json(result);
+        }
         /// <summary>
         /// 转换部门
         /// </summary>
@@ -159,9 +187,10 @@ namespace Ross.OA.Web.Controllers
                 {
                     respDept = "dept";
                     var deptcode = RespDepartCodes.Split(',');
-                    foreach (string code in deptcode)
+                    foreach (string id in deptcode)
                     {
-                        var m = EmpSev.ReposityDept.Get(int.Parse(code));
+                        int deptid = int.Parse(id);
+                        var m = EmpSev.ReposityDept.GetAllList(o => o.Id == deptid).FirstOrDefault();
                         if (m != null)
                         {
                             respDept += "," + m.DepartName;
@@ -193,6 +222,7 @@ namespace Ross.OA.Web.Controllers
                     model.OrderDate = DateTime.Now.ToShortDateString();
                     model.PromiseDate = DateTime.Now.ToShortDateString();
                     model.EnterPerson = EmpName;
+                    model.FollowUpUser = EmpName;
                 }
             }
             return Json(model);
@@ -296,7 +326,7 @@ namespace Ross.OA.Web.Controllers
             return Json(result);
         }
 
-        public void AddShipHdLog(ShipHead entity, int deptID, int empId, long OID)
+        public void AddShipHdLog(ShipHead entity, int deptid, int empId, long OID)
         {
             try
             {
@@ -308,7 +338,7 @@ namespace Ross.OA.Web.Controllers
                 obj.objects = "ShipHead";
 
                 EmployeeService empServ = new EmployeeService();
-                var respEmp = empServ.ReposityEmp.GetAllList(o => o.DepartId == deptID && o.Position == "Charger").FirstOrDefault();
+                var respEmp = empServ.ReposityEmp.GetAllList(o => o.DepartId == deptid && o.Position == "Charger").FirstOrDefault();
                 if (respEmp != null)
                 {
                     AffairService affairServ = new AffairService();
@@ -322,7 +352,7 @@ namespace Ross.OA.Web.Controllers
                         EmergGrade = 3,
                         EmpId = empId,
                         RespEmpId = respEmp.Id,
-                        RespDepartId = deptID,
+                        RespDepartId = deptid,
                         ContractNum = entity.ContractNum,
                         PartNum = entity.ProductNum,
                         Objects = "ShipHead"
@@ -480,8 +510,8 @@ namespace Ross.OA.Web.Controllers
                             entity.ShipQty = AppBase.ToDecimal(GetCellValue(row.Cells[6]));
                             entity.IUM = GetCellValue(row.Cells[7]);
                             entity.SONum = GetCellValue(row.Cells[8]);
-                            entity.Reasons = GetCellValue(row.Cells[9]);
-                            entity.RespDepartCodes = GetCellValue(row.Cells[10]);
+                            entity.TypeCode = GetCellValue(row.Cells[9]);
+                            entity.RespDepartCodes = "-";
                             entity.ShipID = shipid;
                             entity.IsConfirm = false;
                             entity.OpenLine = true;
@@ -524,8 +554,9 @@ namespace Ross.OA.Web.Controllers
             rowhead.CreateCell(6).SetCellValue("数量");
             rowhead.CreateCell(7).SetCellValue("单位");
             rowhead.CreateCell(8).SetCellValue("SO号");
-            rowhead.CreateCell(9).SetCellValue("原因");
-            rowhead.CreateCell(10).SetCellValue("责任部门");
+            rowhead.CreateCell(9).SetCellValue("PO号");
+            rowhead.CreateCell(10).SetCellValue("运输方式");
+            rowhead.CreateCell(11).SetCellValue("包装方式");
 
             int RowNum = 0;
             foreach (var item in DataLists)
@@ -540,8 +571,9 @@ namespace Ross.OA.Web.Controllers
                 row.CreateCell(6).SetCellValue(item.ShipQty.ToString());
                 row.CreateCell(7).SetCellValue(item.IUM);
                 row.CreateCell(8).SetCellValue(item.SONum);
-                row.CreateCell(9).SetCellValue(item.Reasons);
-                row.CreateCell(10).SetCellValue(CvtDept(item.RespDepartCodes, EmpSev));
+                row.CreateCell(9).SetCellValue(ShipHD.PONum);
+                row.CreateCell(10).SetCellValue(ShipHD.ShipviaCode);
+                row.CreateCell(11).SetCellValue(ShipHD.PackageType);
                 RowNum++;
             }
 

@@ -21,7 +21,8 @@
                 <div class="btn-group">
                     <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="新建"><i class="fa fa-file"></i></button>
                     <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="新建分录" onclick="GetNewDetail()"><i class="fa fa-files-o"></i></button>
-                    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="导入"><i class="fa fa-level-up" data-toggle="modal" data-target="#modal-default" ></i></button>
+                    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="保存" v-on:click="dosubmit"><i class="fa fa-save"></i></button>
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default"  title="导入"><i class="fa fa-level-up" ></i></button>
                     <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="导出" onclick="ExportExcel()"><i class="fa fa-level-down"></i></button>
                     <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="刷新" onclick="GetDatas()"><i class="fa fa-refresh"></i></button>
                     <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="删除" onclick="DelShipDT()"><i class="fa fa-remove"></i></button>
@@ -89,10 +90,10 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="CustID" class="col-sm-2 control-label">客户编号</label>
+                                        <label for="CustID" class="col-sm-2 control-label">选择客户</label>
                                         <div class="col-sm-10">
                                             <select class="form-control select2 CustID" v-model="ShipHd.CustID">
-                                                <option v-for="option in CustomerItems" v-bind:value="option.Id">{{option.CustName}}</option>
+                                                <option v-for="option in CustomerItems" v-bind:value="option.CustID">{{option.CustName}}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -139,24 +140,30 @@
                                         </div>
                                         <label class="col-sm-2  control-label">订单状态</label>
                                         <div class="col-sm-5">
-                                            <button type="button" v-if="ShipHd.ApproveStatus === 'A'" class="btn btn-success btn-sm" onclick="SubmitApprv('A')">批准</button>
-                                            <button type="button" v-if="ShipHd.ApproveStatus === 'R'" class="btn btn-danger btn-sm" onclick="SubmitApprv('R')">拒绝</button>
-                                            <button type="button" v-if="ShipHd.ApproveStatus === 'P'" class="btn btn-info btn-sm" onclick="SubmitApprv('P')">待批准</button>
-                                            <button type="button" v-else class="btn btn-warning btn-sm" onclick="SubmitApprv('P')">未提交</button>
+                                            <button type="button" v-if="ShipHd.ApproveStatus === 'A'" class="btn btn-success btn-sm">批准</button>
+                                            <button type="button" v-if="ShipHd.ApproveStatus === 'P'" class="btn btn-danger btn-sm" onclick="SubmitApprv('R')">拒绝</button>
+                                            <button type="button" v-if="ShipHd.ApproveStatus === 'p'" class="btn btn-info btn-sm" onclick="SubmitApprv('A')">待批准</button>
+                                            <button type="button" v-if="ShipHd.ApproveStatus === 'U'" class="btn btn-warning btn-sm" onclick="SubmitApprv('P')">未提交</button>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="ShipviaCode" class="col-sm-2 control-label">运输方式</label>
                                         <div class="col-sm-4">
-                                            <select class="form-control select2 ShipviaCode" v-model="ShipHd.ShipviaCode">
+                                            <select class="form-control ShipviaCode" v-model="ShipHd.ShipviaCode">
                                                 <option v-for="option in TransportList" v-bind:value="option.CategoryIndex">{{option.PrevStr}} {{option.CategoryName}}</option>
                                             </select>
                                         </div>
                                         <label for="PackageType" class="col-sm-2 control-label">包装形式</label>
                                         <div class="col-sm-4">
-                                            <select class="form-control select2 PackageType" v-model="ShipHd.PackageType">
+                                            <select class="form-control PackageType" v-model="ShipHd.PackageType">
                                                 <option v-for="option in PackageList" v-bind:value="option.CategoryIndex">{{option.PrevStr}} {{option.CategoryName}}</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="TransportSN" class="col-sm-2 control-label">运输单号</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" v-model="ShipHd.TransportSN">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -228,7 +235,7 @@
                                     <div class="form-group">
                                         <label for="PartDesc" class="col-sm-2 control-label">物料描述</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control PartDesc" readonly="readonly" v-model="ShipDetail.PartDesc">
+                                            <input type="text" class="form-control PartDesc"  v-model="ShipDetail.PartDesc">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -390,7 +397,8 @@
                 todayHighlight: true,
                 language:"zh-CN",
                 format:"yyyy-mm-dd"
-            })
+            })            
+            
             $('.select2').select2()
             $('.icheck').iCheck({
                 checkboxClass: 'icheckbox_minimal-blue',
@@ -436,12 +444,19 @@
                 var _keyw = $(this).val();
                 GetPart(_keyw);
             })
+            $(".CustID").on("change", function (e) {
+                $.post('/Customer/GetLists', { page: 1, pageSize: 1, keywords: $(this).val() }, function (resp) {
+                    if (resp.datas != null) {
+                        datas.ShipHd.OTSAddress = resp.datas[0].Address1;
+                        datas.ShipHd.CustID = resp.datas[0].CustID;
+                    }
+                })                
+            })
 
             $(".ShipDTSelect").on("change",function(e){
                 localStorage.DetailItem = $(this).val();
                 GetDatas();
-            })           
-
+            })  
             var GetPart = function (_keyw) {
                 if (_keyw.length >= 13) {
                     $.post('/Part/GetPartSelect', {
@@ -479,9 +494,6 @@
                 if (datas.ShipHd.RespDepartCodes != null) {
                     $(".RespDepartCodes").val(datas.ShipHd.RespDepartCodes.split(",")).trigger('change');
                 }
-                $.post('/Customer/GetModel', { id: response.CustID }, function (resp) {
-                    datas.Customer = resp;
-                })
                 if(datas.ShipHd.Id==0)
                 {
                     $.post('/Ship/GetOrderNum', { }, function (resp) {
@@ -500,22 +512,17 @@
             })
         }
 
-        GetDatas();
+        GetDatas()
 
         var vm = new Vue({
             el: "#formEdit",
             data: datas,
             methods: {
                 InitData: function () {
-                    
                 },
-                dosubmit: function () {
-                    datas.ShipHd.CustID = $(".CustID").select2("val");
-                    datas.ShipHd.ShipviaCode = $(".ShipviaCode").select2("val");
-                    datas.ShipHd.PackageType = $(".PackageType").select2("val");
-                    datas.ShipHd.RespDepartCodes = $('.RespDepartCodes').select2("val").join(",");
-                    datas.ShipDetail.RespDepartCodes = $('.RespDepartCodesDT').select2("val").join(",");
-
+                dosubmit: function () {                    
+                    datas.ShipHd.RespDepartCodes = $('.RespDepartCodes').val().join(",");
+                    datas.ShipDetail.RespDepartCodes = $('.RespDepartCodesDT').val().join(",");
                     $.ajax({
                         url: '/Ship/InsertOrUpdateHD',
                         type: "POST",
@@ -566,7 +573,7 @@
                 }
             }
         })        
-
+        
         function GetNewDetail(){
             $.post('/Ship/GetNewDetail', { }, function (response) {
                 datas.ShipDetail=response;
@@ -610,7 +617,13 @@
         }
 
         function SubmitApprv(apst){
-
+            $.post('/Ship/UpdateApprove', { id: datas.ShipHd.Id, status: apst }, function (resp) {
+                if (resp.code == 100) {
+                    toastr.success('保存成功！'); GetDatas();
+                } else {
+                    toastr.error(resp.message);
+                }
+            })
         }
 
         function ExportExcel() {
